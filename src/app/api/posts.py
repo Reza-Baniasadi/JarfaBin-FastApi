@@ -1,0 +1,45 @@
+from typing import Annotated, Any, cast
+
+from fastapi import APIRouter, Depends, Request
+from fastcrud.paginated import PaginatedListResponse, compute_offset, paginated_response
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from ...api.dependencies import get_current_superuser, get_current_user
+from ...core.db.database import async_get_db
+from ...core.exceptions.http_exceptions import ForbiddenException, NotFoundException
+from ...core.utils.cache import cache
+from ...crud.crud_posts import crud_posts
+from ...crud.crud_users import crud_users
+from ...schemas.post import PostCreate, PostCreateInternal, PostRead, PostUpdate
+from ...schemas.user import UserRead
+
+router = APIRouter(tags=["posts"])
+
+
+@router.post("/{username}/post", response_model=PostRead, status_code=201)
+async def write_post(
+    request: Request,
+    username: str,
+    post: PostCreate,
+    current_user: Annotated[dict, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(async_get_db)],
+) -> PostRead:
+    db_user = await crud_users.get(db=db, username=username, is_deleted=False, schema_to_select=UserRead)
+    if db_user is None:
+        raise NotFoundException("User not found")
+
+    db_user = cast(UserRead, db_user)
+    if current_user["id"] != db_user.id:
+        raise ForbiddenException()
+
+    post_internal_dict = post.model_dump()
+    post_internal_dict["created_by_user_id"] = db_user.id
+
+    post_internal = PostCreateInternal(**post_internal_dict)
+    created_post = await crud_posts.create(db=db, object=post_internal)
+
+    post_read = await crud_posts.get(db=db, id=created_post.id, schema_to_select=PostRead)
+    if post_read is None:
+        raise NotFoundException("Created post not found")
+
+    return cast(PostRead, post_read)

@@ -41,3 +41,33 @@ async def write_user(
         raise NotFoundException("Created user not found")
 
     return cast(UserRead, user_read)
+
+
+
+@router.get("/users", response_model=PaginatedListResponse[UserRead])
+async def read_users(
+    request: Request, db: Annotated[AsyncSession, Depends(async_get_db)], page: int = 1, items_per_page: int = 10
+) -> dict:
+    users_data = await crud_users.get_multi(
+        db=db,
+        offset=compute_offset(page, items_per_page),
+        limit=items_per_page,
+        is_deleted=False,
+    )
+
+    response: dict[str, Any] = paginated_response(crud_data=users_data, page=page, items_per_page=items_per_page)
+    return response
+
+
+@router.get("/user/me/", response_model=UserRead)
+async def read_users_me(request: Request, current_user: Annotated[dict, Depends(get_current_user)]) -> dict:
+    return current_user
+
+
+@router.get("/user/{username}", response_model=UserRead)
+async def read_user(request: Request, username: str, db: Annotated[AsyncSession, Depends(async_get_db)]) -> UserRead:
+    db_user = await crud_users.get(db=db, username=username, is_deleted=False, schema_to_select=UserRead)
+    if db_user is None:
+        raise NotFoundException("User not found")
+
+    return cast(UserRead, db_user)

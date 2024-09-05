@@ -93,3 +93,29 @@ async def read_post(
         raise NotFoundException("Post not found")
 
     return cast(PostRead, db_post)
+
+
+@router.patch("/{username}/post/{id}")
+@cache("{username}_post_cache", resource_id_name="id", pattern_to_invalidate_extra=["{username}_posts:*"])
+async def patch_post(
+    request: Request,
+    username: str,
+    id: int,
+    values: PostUpdate,
+    current_user: Annotated[dict, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(async_get_db)],
+) -> dict[str, str]:
+    db_user = await crud_users.get(db=db, username=username, is_deleted=False, schema_to_select=UserRead)
+    if db_user is None:
+        raise NotFoundException("User not found")
+
+    db_user = cast(UserRead, db_user)
+    if current_user["id"] != db_user.id:
+        raise ForbiddenException()
+
+    db_post = await crud_posts.get(db=db, id=id, is_deleted=False, schema_to_select=PostRead)
+    if db_post is None:
+        raise NotFoundException("Post not found")
+
+    await crud_posts.update(db=db, object=values, id=id)
+    return {"message": "Post updated"}

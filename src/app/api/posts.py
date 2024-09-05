@@ -119,3 +119,47 @@ async def patch_post(
 
     await crud_posts.update(db=db, object=values, id=id)
     return {"message": "Post updated"}
+
+
+
+@router.delete("/{username}/post/{id}")
+@cache("{username}_post_cache", resource_id_name="id", to_invalidate_extra={"{username}_posts": "{username}"})
+async def erase_post(
+    request: Request,
+    username: str,
+    id: int,
+    current_user: Annotated[dict, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(async_get_db)],
+) -> dict[str, str]:
+    db_user = await crud_users.get(db=db, username=username, is_deleted=False, schema_to_select=UserRead)
+    if db_user is None:
+        raise NotFoundException("User not found")
+
+    db_user = cast(UserRead, db_user)
+    if current_user["id"] != db_user.id:
+        raise ForbiddenException()
+
+    db_post = await crud_posts.get(db=db, id=id, is_deleted=False, schema_to_select=PostRead)
+    if db_post is None:
+        raise NotFoundException("Post not found")
+
+    await crud_posts.delete(db=db, id=id)
+
+    return {"message": "Post deleted"}
+
+
+@router.delete("/{username}/db_post/{id}", dependencies=[Depends(get_current_superuser)])
+@cache("{username}_post_cache", resource_id_name="id", to_invalidate_extra={"{username}_posts": "{username}"})
+async def erase_db_post(
+    request: Request, username: str, id: int, db: Annotated[AsyncSession, Depends(async_get_db)]
+) -> dict[str, str]:
+    db_user = await crud_users.get(db=db, username=username, is_deleted=False, schema_to_select=UserRead)
+    if db_user is None:
+        raise NotFoundException("User not found")
+
+    db_post = await crud_posts.get(db=db, id=id, is_deleted=False, schema_to_select=PostRead)
+    if db_post is None:
+        raise NotFoundException("Post not found")
+
+    await crud_posts.db_delete(db=db, id=id)
+    return {"message": "Post deleted from the database"}

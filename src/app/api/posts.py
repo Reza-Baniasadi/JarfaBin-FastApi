@@ -43,3 +43,33 @@ async def write_post(
         raise NotFoundException("Created post not found")
 
     return cast(PostRead, post_read)
+
+
+@router.get("/{username}/posts", response_model=PaginatedListResponse[PostRead])
+@cache(
+    key_prefix="{username}_posts:page_{page}:items_per_page:{items_per_page}",
+    resource_id_name="username",
+    expiration=60,
+)
+async def read_posts(
+    request: Request,
+    username: str,
+    db: Annotated[AsyncSession, Depends(async_get_db)],
+    page: int = 1,
+    items_per_page: int = 10,
+) -> dict:
+    db_user = await crud_users.get(db=db, username=username, is_deleted=False, schema_to_select=UserRead)
+    if not db_user:
+        raise NotFoundException("User not found")
+
+    db_user = cast(UserRead, db_user)
+    posts_data = await crud_posts.get_multi(
+        db=db,
+        offset=compute_offset(page, items_per_page),
+        limit=items_per_page,
+        created_by_user_id=db_user.id,
+        is_deleted=False,
+    )
+
+    response: dict[str, Any] = paginated_response(crud_data=posts_data, page=page, items_per_page=items_per_page)
+    return response

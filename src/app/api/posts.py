@@ -73,3 +73,23 @@ async def read_posts(
 
     response: dict[str, Any] = paginated_response(crud_data=posts_data, page=page, items_per_page=items_per_page)
     return response
+
+
+
+@router.get("/{username}/post/{id}", response_model=PostRead)
+@cache(key_prefix="{username}_post_cache", resource_id_name="id")
+async def read_post(
+    request: Request, username: str, id: int, db: Annotated[AsyncSession, Depends(async_get_db)]
+) -> PostRead:
+    db_user = await crud_users.get(db=db, username=username, is_deleted=False, schema_to_select=UserRead)
+    if db_user is None:
+        raise NotFoundException("User not found")
+
+    db_user = cast(UserRead, db_user)
+    db_post = await crud_posts.get(
+        db=db, id=id, created_by_user_id=db_user.id, is_deleted=False, schema_to_select=PostRead
+    )
+    if db_post is None:
+        raise NotFoundException("Post not found")
+
+    return cast(PostRead, db_post)

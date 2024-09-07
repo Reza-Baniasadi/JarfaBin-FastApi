@@ -159,7 +159,7 @@ async def erase_db_post(
 
     db_post = await crud_posts.get(db=db, id=id, is_deleted=False, schema_to_select=PostRead)
     if db_post is None:
-        raise NotFoundException("Post not found")
+        raise NotFoundException("Post is not found")
 
     await crud_posts.db_delete(db=db, id=id)
     return {"message": "Post deleted from the database"}

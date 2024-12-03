@@ -13,14 +13,14 @@ from ..schemas.tier import TierCreate, TierUpdate
 from ..schemas.user import UserCreate, UserUpdate
 
 
-# class PostCreateAdmin(BaseModel):
-#     title: Annotated[str, Field(min_length=2, max_length=30, examples=["This is my post"])]
-#     text: Annotated[str, Field(min_length=1, max_length=63206, examples=["This is the content of my post."])]
-#     created_by_user_id: int
-#     media_url: Annotated[
-#         str | None,
-#         Field(pattern=r"^(https?|ftp)://[^\s/$.?#].[^\s]*$", examples=["https://www.postimageurl.com"], default=None),
-#     ]
+class PostCreateAdmin(BaseModel):
+    title: Annotated[str, Field(min_length=2, max_length=30, examples=["This is my post"])]
+    text: Annotated[str, Field(min_length=1, max_length=63206, examples=["This is the content of my post."])]
+    created_by_user_id: int
+    media_url: Annotated[
+        str | None,
+        Field(pattern=r"^(https?|ftp)://[^\s/$.?#].[^\s]*$", examples=["https://www.postimageurl.com"], default=None),
+    ]
 
 
 def register_admin_views(admin: CRUDAdmin) -> None:

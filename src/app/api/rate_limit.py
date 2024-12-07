@@ -78,3 +78,23 @@ async def read_rate_limit(
         raise NotFoundException("Rate Limit not found")
 
     return cast(RateLimitRead, db_rate_limit)
+
+@router.patch("/tier/{tier_name}/rate_limit/{id}", dependencies=[Depends(get_current_superuser)])
+async def patch_rate_limit(
+    request: Request,
+    tier_name: str,
+    id: int,
+    values: RateLimitUpdate,
+    db: Annotated[AsyncSession, Depends(async_get_db)],
+) -> dict[str, str]:
+    db_tier = await crud_tiers.get(db=db, name=tier_name, schema_to_select=TierRead)
+    if not db_tier:
+        raise NotFoundException("Tier not found")
+
+    db_tier = cast(TierRead, db_tier)
+    db_rate_limit = await crud_rate_limits.get(db=db, tier_id=db_tier.id, id=id, schema_to_select=RateLimitRead)
+    if db_rate_limit is None:
+        raise NotFoundException("Rate Limit not found")
+
+    await crud_rate_limits.update(db=db, object=values, id=id)
+    return {"message": "Rate Limit updated"}

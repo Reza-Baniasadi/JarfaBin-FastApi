@@ -62,3 +62,19 @@ async def read_rate_limits(
 
     response: dict[str, Any] = paginated_response(crud_data=rate_limits_data, page=page, items_per_page=items_per_page)
     return response
+
+
+@router.get("/tier/{tier_name}/rate_limit/{id}", response_model=RateLimitRead)
+async def read_rate_limit(
+    request: Request, tier_name: str, id: int, db: Annotated[AsyncSession, Depends(async_get_db)]
+) -> RateLimitRead:
+    db_tier = await crud_tiers.get(db=db, name=tier_name, schema_to_select=TierRead)
+    if not db_tier:
+        raise NotFoundException("Tier not found")
+
+    db_tier = cast(TierRead, db_tier)
+    db_rate_limit = await crud_rate_limits.get(db=db, tier_id=db_tier.id, id=id, schema_to_select=RateLimitRead)
+    if db_rate_limit is None:
+        raise NotFoundException("Rate Limit not found")
+
+    return cast(RateLimitRead, db_rate_limit)

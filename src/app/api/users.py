@@ -122,3 +122,29 @@ async def erase_user(
     await crud_users.delete(db=db, username=username)
     await blacklist_token(token=token, db=db)
     return {"message": "User deleted"}
+
+
+@router.get("/user/{username}/rate_limits", dependencies=[Depends(get_current_superuser)])
+async def read_user_rate_limits(
+    request: Request, username: str, db: Annotated[AsyncSession, Depends(async_get_db)]
+) -> dict[str, Any]:
+    db_user = await crud_users.get(db=db, username=username, schema_to_select=UserRead)
+    if db_user is None:
+        raise NotFoundException("User not found")
+
+    db_user = cast(UserRead, db_user)
+    user_dict = db_user.model_dump()
+    if db_user.tier_id is None:
+        user_dict["tier_rate_limits"] = []
+        return user_dict
+
+    db_tier = await crud_tiers.get(db=db, id=db_user.tier_id, schema_to_select=TierRead)
+    if db_tier is None:
+        raise NotFoundException("Tier not found")
+
+    db_tier = cast(TierRead, db_tier)
+    db_rate_limits = await crud_rate_limits.get_multi(db=db, tier_id=db_tier.id)
+
+    user_dict["tier_rate_limits"] = db_rate_limits["data"]
+
+    return user_dict

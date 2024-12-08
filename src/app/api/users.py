@@ -101,3 +101,24 @@ async def patch_user(
 
     await crud_users.update(db=db, object=values, username=username)
     return {"message": "User updated"}
+
+
+
+@router.delete("/user/{username}")
+async def erase_user(
+    request: Request,
+    username: str,
+    current_user: Annotated[dict, Depends(get_current_user)],
+    db: Annotated[AsyncSession, Depends(async_get_db)],
+    token: str = Depends(oauth2_scheme),
+) -> dict[str, str]:
+    db_user = await crud_users.get(db=db, username=username, schema_to_select=UserRead)
+    if not db_user:
+        raise NotFoundException("User not found")
+
+    if username != current_user["username"]:
+        raise ForbiddenException()
+
+    await crud_users.delete(db=db, username=username)
+    await blacklist_token(token=token, db=db)
+    return {"message": "User deleted"}

@@ -31,3 +31,14 @@ def _infer_resource_id(kwargs: dict[str, Any], resource_id_type: type | tuple[ty
         raise CacheIdentificationInferenceError
 
     return resource_id
+
+def _extract_data_inside_brackets(input_string: str) -> list[str]:
+    data_inside_brackets = re.findall(r"{(.*?)}", input_string)
+    return data_inside_brackets
+
+
+def _construct_data_dict(data_inside_brackets: list[str], kwargs: dict[str, Any]) -> dict[str, Any]:
+    data_dict = {}
+    for key in data_inside_brackets:
+        data_dict[key] = kwargs[key]
+    return data_dict

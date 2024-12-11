@@ -31,3 +31,17 @@ def _infer_resource_id(kwargs: dict[str, Any], resource_id_type: type | tuple[ty
         raise CacheIdentificationInferenceError
 
     return resource_id
+
+def _construct_data_dict(data_inside_brackets: list[str], kwargs: dict[str, Any]) -> dict[str, Any]:
+    data_dict = {}
+    for key in data_inside_brackets:
+        data_dict[key] = kwargs[key]
+    return data_dict
+
+
+def _format_prefix(prefix: str, kwargs: dict[str, Any]) -> str:
+
+    data_inside_brackets = _extract_data_inside_brackets(prefix)
+    data_dict = _construct_data_dict(data_inside_brackets, kwargs)
+    formatted_prefix = prefix.format(**data_dict)
+    return formatted_prefix

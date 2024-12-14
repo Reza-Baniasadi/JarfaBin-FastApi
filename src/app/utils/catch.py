@@ -45,3 +45,13 @@ def _format_prefix(prefix: str, kwargs: dict[str, Any]) -> str:
     data_dict = _construct_data_dict(data_inside_brackets, kwargs)
     formatted_prefix = prefix.format(**data_dict)
     return formatted_prefix
+
+def _format_extra_data(to_invalidate_extra: dict[str, str], kwargs: dict[str, Any]) -> dict[str, Any]:
+
+    formatted_extra = {}
+    for prefix, id_template in to_invalidate_extra.items():
+        formatted_prefix = _format_prefix(prefix, kwargs)
+        id = _extract_data_inside_brackets(id_template)[0]
+        formatted_extra[formatted_prefix] = kwargs[id]
+
+    return formatted_extra

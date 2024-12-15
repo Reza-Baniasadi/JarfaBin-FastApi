@@ -60,7 +60,7 @@ def _format_extra_data(to_invalidate_extra: dict[str, str], kwargs: dict[str, An
 def cache(
     key_prefix: str,
     resource_id_name: Any = None,
-    expiration: int = 3600,
+    expiration: int = 4500,
     resource_id_type: type | tuple[type, ...] = int,
     to_invalidate_extra: dict[str, Any] | None = None,
     pattern_to_invalidate_extra: list[str] | None = None,

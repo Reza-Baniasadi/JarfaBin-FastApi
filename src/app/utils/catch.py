@@ -109,7 +109,7 @@ def cache(
                 if pattern_to_invalidate_extra is not None:
                     for pattern in pattern_to_invalidate_extra:
                         formatted_pattern = _format_prefix(pattern, kwargs)
-                        await _delete_keys_by_pattern(formatted_pattern + "*")
+                        # await _delete_keys_by_pattern(formatted_pattern + "*")
 
             return result
 

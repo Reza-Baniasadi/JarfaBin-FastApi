@@ -17,7 +17,7 @@ class RateLimiter:
 
     def __new__(cls) -> "RateLimiter":
         if cls._instance is None:
-            cls._instance = super().__new__(cls)
+            cls._instance = super().__new(cls)
         return cls._instance
 
     @classmethod
@@ -27,10 +27,10 @@ class RateLimiter:
             instance.pool = ConnectionPool.from_url(redis_url)
             instance.client = Redis(connection_pool=instance.pool)
 
-    @classmethod
-    def get_client(cls) -> Redis:
-        instance = cls()
-        if instance.client is None:
-            logger.error("Redis client is not initialized.")
-            raise Exception("Redis client is not initialized.")
-        return instance.client
+    # @classmethod
+    # def get_client(cls) -> Redis:
+    #     instance = cls()
+    #     if instance.client is None:
+    #         logger.error("Redis client is not initialized.")
+    #         raise Exception("Redis client is not initialized.")
+    #     return instance.client

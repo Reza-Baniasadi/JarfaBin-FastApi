@@ -12,3 +12,6 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(level
 async def sample_background_task(ctx: Worker, name: str) -> str:
     await asyncio.sleep(5)
     return f"Task {name} is complete!"
+
+async def startup(ctx: Worker) -> None:
+    logging.info("Worker Started")

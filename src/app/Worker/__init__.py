@@ -15,3 +15,6 @@ async def sample_background_task(ctx: Worker, name: str) -> str:
 
 async def startup(ctx: Worker) -> None:
     logging.info("Worker Started")
+
+async def shutdown(ctx: Worker) -> None:
+    logging.info("Worker end")

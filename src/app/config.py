@@ -18,3 +18,10 @@ class AppSettings(BaseSettings):
     CONTACT_NAME: str | None = config("CONTACT_NAME", default=None)
     CONTACT_EMAIL: str | None = config("CONTACT_EMAIL", default=None)
 
+
+
+class CryptSettings(BaseSettings):
+    SECRET_KEY: SecretStr = config("SECRET_KEY", cast=SecretStr)
+    ALGORITHM: str = config("ALGORITHM", default="HS256")
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = config("ACCESS_TOKEN_EXPIRE_MINUTES", default=30)
+    REFRESH_TOKEN_EXPIRE_DAYS: int = config("REFRESH_TOKEN_EXPIRE_DAYS", default=7)

@@ -25,3 +25,13 @@ class CryptSettings(BaseSettings):
     ALGORITHM: str = config("ALGORITHM", default="HS256")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = config("ACCESS_TOKEN_EXPIRE_MINUTES", default=30)
     REFRESH_TOKEN_EXPIRE_DAYS: int = config("REFRESH_TOKEN_EXPIRE_DAYS", default=7)
+
+
+
+class DatabaseSettings(BaseSettings):
+    pass
+
+class SQLiteSettings(DatabaseSettings):
+    SQLITE_URI: str = config("SQLITE_URI", default="./sql_app.db")
+    SQLITE_SYNC_PREFIX: str = config("SQLITE_SYNC_PREFIX", default="sqlite:///")
+    SQLITE_ASYNC_PREFIX: str = config("SQLITE_ASYNC_PREFIX", default="sqlite+aiosqlite:///")

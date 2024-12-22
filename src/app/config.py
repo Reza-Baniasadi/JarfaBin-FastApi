@@ -103,12 +103,17 @@ class CRUDAdminSettings(BaseSettings):
 
 
 
+class RedisQueueSettings(BaseSettings):
+    REDIS_QUEUE_HOST: str = config("REDIS_QUEUE_HOST", default="localhost")
+    REDIS_QUEUE_PORT: int = config("REDIS_QUEUE_PORT", default=6379)
+
 
 
 class RedisRateLimiterSettings(BaseSettings):
     REDIS_RATE_LIMIT_HOST: str = config("REDIS_RATE_LIMIT_HOST", default="localhost")
     REDIS_RATE_LIMIT_PORT: int = config("REDIS_RATE_LIMIT_PORT", default=6379)
     REDIS_RATE_LIMIT_URL: str = f"redis://{REDIS_RATE_LIMIT_HOST}:{REDIS_RATE_LIMIT_PORT}"
+
 
 
 class EnvironmentOption(Enum):
@@ -167,3 +172,6 @@ class Settings(
 
 
 settings = Settings()
+
+    ClientSideCacheSettings,
+    RedisQueueSettings,

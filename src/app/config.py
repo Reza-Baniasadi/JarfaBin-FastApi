@@ -74,3 +74,8 @@ class RedisCacheSettings(BaseSettings):
     REDIS_CACHE_HOST: str = config("REDIS_CACHE_HOST", default="localhost")
     REDIS_CACHE_PORT: int = config("REDIS_CACHE_PORT", default=6379)
     REDIS_CACHE_URL: str = f"redis://{REDIS_CACHE_HOST}:{REDIS_CACHE_PORT}"
+
+
+class DefaultRateLimitSettings(BaseSettings):
+    DEFAULT_RATE_LIMIT_LIMIT: int = config("DEFAULT_RATE_LIMIT_LIMIT", default=10)
+    DEFAULT_RATE_LIMIT_PERIOD: int = config("DEFAULT_RATE_LIMIT_PERIOD", default=3600)

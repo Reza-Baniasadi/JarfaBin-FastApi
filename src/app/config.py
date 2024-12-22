@@ -162,6 +162,7 @@ class Settings(
     CryptSettings,
     FirstUserSettings,
     TestSettings,
+    RedisQueueSettings,
     RedisCacheSettings,
     RedisRateLimiterSettings,
     DefaultRateLimitSettings,
@@ -172,6 +173,3 @@ class Settings(
 
 
 settings = Settings()
-
-    ClientSideCacheSettings,
-    RedisQueueSettings,

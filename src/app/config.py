@@ -66,3 +66,11 @@ class FirstUserSettings(BaseSettings):
     ADMIN_EMAIL: str = config("ADMIN_EMAIL", default="admin@admin.com")
     ADMIN_USERNAME: str = config("ADMIN_USERNAME", default="admin")
     ADMIN_PASSWORD: str = config("ADMIN_PASSWORD", default="!Ch4ng3Th1sP4ssW0rd!")
+
+class TestSettings(BaseSettings): ...
+
+
+class RedisCacheSettings(BaseSettings):
+    REDIS_CACHE_HOST: str = config("REDIS_CACHE_HOST", default="localhost")
+    REDIS_CACHE_PORT: int = config("REDIS_CACHE_PORT", default=6379)
+    REDIS_CACHE_URL: str = f"redis://{REDIS_CACHE_HOST}:{REDIS_CACHE_PORT}"

@@ -100,3 +100,9 @@ class CRUDAdminSettings(BaseSettings):
     CRUD_ADMIN_REDIS_DB: int = config("CRUD_ADMIN_REDIS_DB", default=0)
     CRUD_ADMIN_REDIS_PASSWORD: str | None = config("CRUD_ADMIN_REDIS_PASSWORD", default="None")
     CRUD_ADMIN_REDIS_SSL: bool = config("CRUD_ADMIN_REDIS_SSL", default=False)
+
+
+class EnvironmentOption(Enum):
+    LOCAL = "local"
+    STAGING = "staging"
+    PRODUCTION = "production"

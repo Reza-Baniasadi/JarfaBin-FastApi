@@ -102,6 +102,9 @@ class CRUDAdminSettings(BaseSettings):
     CRUD_ADMIN_REDIS_SSL: bool = config("CRUD_ADMIN_REDIS_SSL", default=False)
 
 
+class ClientSideCacheSettings(BaseSettings):
+    CLIENT_CACHE_MAX_AGE: int = config("CLIENT_CACHE_MAX_AGE", default=60)
+
 
 class RedisQueueSettings(BaseSettings):
     REDIS_QUEUE_HOST: str = config("REDIS_QUEUE_HOST", default="localhost")
@@ -164,6 +167,7 @@ class Settings(
     TestSettings,
     RedisQueueSettings,
     RedisCacheSettings,
+    ClientSideCacheSetings,
     RedisRateLimiterSettings,
     DefaultRateLimitSettings,
     CRUDAdminSettings,
@@ -173,3 +177,5 @@ class Settings(
 
 
 settings = Settings()
+    
+

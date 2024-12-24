@@ -9,3 +9,7 @@ class HealthCheck(BaseModel):
     name: str
     version: str
     description: str
+
+
+class UUIDSchema(BaseModel):
+    uuid: uuid_pkg.UUID = Field(default_factory=uuid_pkg.uuid4)

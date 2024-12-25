@@ -44,3 +44,7 @@ class PersistentDeletion(BaseModel):
             return deleted_at.isoformat()
 
         return None
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str

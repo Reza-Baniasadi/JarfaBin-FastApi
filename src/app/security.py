@@ -17,3 +17,16 @@ SECRET_KEY: SecretStr = settings.SECRET_KEY
 ALGORITHM = settings.ALGORITHM
 ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 REFRESH_TOKEN_EXPIRE_DAYS = settings.REFRESH_TOKEN_EXPIRE_DAYS
+
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/login")
+
+
+class TokenType(str, Enum):
+    ACCESS = "access"
+    REFRESH = "refresh"
+
+
+async def verify_password(plain_password: str, hashed_password: str) -> bool:
+    correct_password: bool = bcrypt.checkpw(plain_password.encode(), hashed_password.encode())
+    return correct_password

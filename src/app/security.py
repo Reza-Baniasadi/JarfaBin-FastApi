@@ -59,3 +59,23 @@ async def create_access_token(data: dict[str, Any], expires_delta: timedelta | N
     to_encode.update({"exp": expire, "token_type": TokenType.ACCESS})
     encoded_jwt: str = jwt.encode(to_encode, SECRET_KEY.get_secret_value(), algorithm=ALGORITHM)
     return encoded_jwt
+
+
+async def verify_token(token: str, expected_token_type: TokenType, db: AsyncSession) -> TokenData | None:
+
+    is_blacklisted = await crud_token_blacklist.exists(db, token=token)
+    if is_blacklisted:
+        return None
+
+    try:
+        payload = jwt.decode(token, SECRET_KEY.get_secret_value(), algorithms=[ALGORITHM])
+        username_or_email: str | None = payload.get("sub")
+        token_type: str | None = payload.get("token_type")
+
+        if username_or_email is None or token_type != expected_token_type:
+            return None
+
+        return TokenData(username_or_email=username_or_email)
+
+    except JWTError:
+        return None

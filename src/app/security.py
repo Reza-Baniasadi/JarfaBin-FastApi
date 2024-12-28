@@ -30,3 +30,7 @@ class TokenType(str, Enum):
 async def verify_password(plain_password: str, hashed_password: str) -> bool:
     correct_password: bool = bcrypt.checkpw(plain_password.encode(), hashed_password.encode())
     return correct_password
+
+def get_password_hash(password: str) -> str:
+    hashed_password: str = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+    return hashed_password

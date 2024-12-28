@@ -49,3 +49,13 @@ async def authenticate_user(username_or_email: str, password: str, db: AsyncSess
         return False
 
     return db_user
+
+async def create_access_token(data: dict[str, Any], expires_delta: timedelta | None = None) -> str:
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.now(UTC).replace(tzinfo=None) + expires_delta
+    else:
+        expire = datetime.now(UTC).replace(tzinfo=None) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire, "token_type": TokenType.ACCESS})
+    encoded_jwt: str = jwt.encode(to_encode, SECRET_KEY.get_secret_value(), algorithm=ALGORITHM)
+    return encoded_jwt

@@ -87,3 +87,10 @@ async def blacklist_tokens(access_token: str, refresh_token: str, db: AsyncSessi
         if exp_timestamp is not None:
             expires_at = datetime.fromtimestamp(exp_timestamp)
             await crud_token_blacklist.create(db, object=TokenBlacklistCreate(token=token, expires_at=expires_at))
+
+async def blacklist_token(token: str, db: AsyncSession) -> None:
+    payload = jwt.decode(token, SECRET_KEY.get_secret_value(), algorithms=[ALGORITHM])
+    exp_timestamp = payload.get("exp")
+    if exp_timestamp is not None:
+        expires_at = datetime.fromtimestamp(exp_timestamp)
+        await crud_token_blacklist.create(db, object=TokenBlacklistCreate(token=token, expires_at=expires_at))

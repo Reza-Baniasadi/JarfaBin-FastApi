@@ -52,7 +52,7 @@ async def create_redis_queue_pool() -> None:
 
 async def close_redis_queue_pool() -> None:
     if queue.pool is not None:
-         queue.pool.aclose()  # type: ignore
+        await queue.pool.aclose()  # type: ignore
 
 async def create_redis_rate_limit_pool() -> None:
     rate_limiter.initialize(settings.REDIS_RATE_LIMIT_URL)  # type: ignore

@@ -56,3 +56,55 @@ async def close_redis_queue_pool() -> None:
 
 async def create_redis_rate_limit_pool() -> None:
     rate_limiter.initialize(settings.REDIS_RATE_LIMIT_URL)  # type: ignore
+
+
+def lifespan_factory(
+    settings: (
+        DatabaseSettings
+        | RedisCacheSettings
+        | AppSettings
+        | ClientSideCacheSettings
+        | RedisQueueSettings
+        | RedisRateLimiterSettings
+        | EnvironmentSettings
+    ),
+    create_tables_on_start: bool = True,
+) -> Callable[[FastAPI], _AsyncGeneratorContextManager[Any]]:
+
+    @asynccontextmanager
+    async def lifespan(app: FastAPI) -> AsyncGenerator:
+        from asyncio import Event
+
+        initialization_complete = Event()
+        app.state.initialization_complete = initialization_complete
+
+        await set_threadpool_tokens()
+
+        try:
+            if isinstance(settings, RedisCacheSettings):
+                await create_redis_cache_pool()
+
+            if isinstance(settings, RedisQueueSettings):
+                await create_redis_queue_pool()
+
+            if isinstance(settings, RedisRateLimiterSettings):
+                await create_redis_rate_limit_pool()
+
+            if create_tables_on_start:
+                await create_tables()
+
+            initialization_complete.set()
+
+            yield
+
+        finally:
+            if isinstance(settings, RedisCacheSettings):
+                await close_redis_cache_pool()
+
+            if isinstance(settings, RedisQueueSettings):
+                await close_redis_queue_pool()
+
+            if isinstance(settings, RedisRateLimiterSettings):
+                await close_redis_rate_limit_pool()
+
+    return lifespan

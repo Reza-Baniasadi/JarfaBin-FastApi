@@ -31,3 +31,10 @@ class PostRead(BaseModel):
     created_by_user_id: int
     created_at: datetime
 
+class PostCreate(PostBase):
+    model_config = ConfigDict(extra="forbid")
+
+    media_url: Annotated[
+        str | None,
+        Field(pattern=r"^(https?|ftp)://[^\s/$.?#].[^\s]*$", examples=["https://www.postimageurl.com"], default=None),
+    ]

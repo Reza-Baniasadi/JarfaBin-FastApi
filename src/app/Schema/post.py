@@ -56,3 +56,14 @@ class PostUpdate(BaseModel):
         str | None,
         Field(pattern=r"^(https?|ftp)://[^\s/$.?#].[^\s]*$", examples=["https://www.postimageurl.com"], default=None),
     ]
+
+
+class PostUpdateInternal(PostUpdate):
+    updated_at: datetime
+
+
+class PostDelete(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    is_deleted: bool
+    deleted_at: datetime

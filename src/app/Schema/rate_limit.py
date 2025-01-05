@@ -18,3 +18,8 @@ class RateLimitBase(BaseModel):
     @field_validator("path")
     def validate_and_sanitize_path(cls, v: str) -> str:
         return sanitize_path(v)
+
+
+class RateLimit(TimestampSchema, RateLimitBase):
+    tier_id: int
+    name: Annotated[str | None, Field(default=None, examples=["users:5:60"])]

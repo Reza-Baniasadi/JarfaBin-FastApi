@@ -23,3 +23,9 @@ class RateLimitBase(BaseModel):
 class RateLimit(TimestampSchema, RateLimitBase):
     tier_id: int
     name: Annotated[str | None, Field(default=None, examples=["users:5:60"])]
+
+
+class RateLimitCreate(RateLimitBase):
+    model_config = ConfigDict(extra="forbid")
+
+    name: Annotated[str | None, Field(default=None, examples=["api_v1_users:5:60"])]

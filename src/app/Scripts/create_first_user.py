@@ -52,4 +52,4 @@ async def create_first_user(session: AsyncSession) -> None:
                 "username": username,
                 "hashed_password": hashed_password,
                 "is_superuser": True,
-            }
+         }

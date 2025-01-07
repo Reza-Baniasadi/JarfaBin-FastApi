@@ -66,3 +66,12 @@ async def create_first_user(session: AsyncSession) -> None:
 
     except Exception as e:
         logger.error(f"Error creating admin user: {e}")
+
+async def main():
+    async with local_session() as session:
+        await create_first_user(session)
+
+
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())

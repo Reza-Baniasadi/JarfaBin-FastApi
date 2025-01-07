@@ -53,3 +53,16 @@ async def create_first_user(session: AsyncSession) -> None:
                 "hashed_password": hashed_password,
                 "is_superuser": True,
          }
+            
+            stmt = insert(user_table).values(data)
+            async with async_engine.connect() as conn:
+                await conn.execute(stmt)
+                await conn.commit()
+
+            logger.info(f"Admin user {username} created successfully.")
+
+        else:
+            logger.info(f"Admin user {username} already exists.")
+
+    except Exception as e:
+        logger.error(f"Error creating admin user: {e}")

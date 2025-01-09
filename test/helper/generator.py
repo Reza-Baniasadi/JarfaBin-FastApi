@@ -23,3 +23,14 @@ def create_user(db: Session, is_super_user: bool = False) -> models.User:
     db.refresh(_user)
 
     return _user
+
+
+fake = Faker()
+
+
+@pytest.fixture(scope="session")
+def client() -> Generator[TestClient, Any, None]:
+    with TestClient(app) as _client:
+        yield _client
+    app.dependency_overrides = {}
+    sync_engine.dispose()

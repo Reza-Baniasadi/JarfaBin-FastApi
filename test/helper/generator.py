@@ -34,3 +34,10 @@ def client() -> Generator[TestClient, Any, None]:
         yield _client
     app.dependency_overrides = {}
     sync_engine.dispose()
+
+
+@pytest.fixture
+def db() -> Generator[Session, Any, None]:
+    session = local_session()
+    yield session
+    session.close()

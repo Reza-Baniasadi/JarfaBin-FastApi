@@ -41,3 +41,7 @@ def db() -> Generator[Session, Any, None]:
     session = local_session()
     yield session
     session.close()
+
+
+def override_dependency(dependency: Callable[..., Any], mocked_response: Any) -> None:
+    app.dependency_overrides[dependency] = lambda: mocked_response

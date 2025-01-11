@@ -59,3 +59,14 @@ def mock_redis():
     mock_redis.set = AsyncMock(return_value=True)
     mock_redis.delete = AsyncMock(return_value=True)
     return mock_redis
+
+
+@pytest.fixture
+def sample_user_data():
+    """Generate sample user data for tests."""
+    return {
+        "name": fake.name(),
+        "username": fake.user_name(),
+        "email": fake.email(),
+        "password": fake.password(),
+    }

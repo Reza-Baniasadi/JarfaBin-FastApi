@@ -50,3 +50,12 @@ def override_dependency(dependency: Callable[..., Any], mocked_response: Any) ->
 @pytest.fixture
 def mock_db():
     return Mock(spec=AsyncSession)
+
+
+ @pytest.fixture
+def mock_redis():
+    mock_redis = Mock()
+    mock_redis.get = AsyncMock(return_value=None)
+    mock_redis.set = AsyncMock(return_value=True)
+    mock_redis.delete = AsyncMock(return_value=True)
+    return mock_redis

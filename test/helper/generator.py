@@ -70,3 +70,23 @@ def sample_user_data():
         "email": fake.email(),
         "password": fake.password(),
     }
+
+
+@pytest.fixture
+def sample_user_read():
+    import uuid
+
+    from src.app.schemas.user import UserRead
+
+    return UserRead(
+        id=1,
+        uuid=uuid.uuid4(),
+        name=fake.name(),
+        username=fake.user_name(),
+        email=fake.email(),
+        profile_image_url=fake.image_url(),
+        is_superuser=False,
+        created_at=fake.date_time(),
+        updated_at=fake.date_time(),
+        tier_id=None,
+    )

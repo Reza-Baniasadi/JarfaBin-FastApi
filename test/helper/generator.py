@@ -52,7 +52,7 @@ def mock_db():
     return Mock(spec=AsyncSession)
 
 
- @pytest.fixture
+@pytest.fixture
 def mock_redis():
     mock_redis = Mock()
     mock_redis.get = AsyncMock(return_value=None)

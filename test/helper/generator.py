@@ -90,3 +90,13 @@ def sample_user_read():
         updated_at=fake.date_time(),
         tier_id=None,
     )
+
+@pytest.fixture
+def current_user_dict():
+    return {
+        "id": 1,
+        "username": fake.user_name(),
+        "email": fake.email(),
+        "name": fake.name(),
+        "is_superuser": False,
+    }

@@ -29,3 +29,14 @@ class TestWriteUser:
                 mock_crud.exists.assert_any_call(db=mock_db, email=user_create.email)
                 mock_crud.exists.assert_any_call(db=mock_db, username=user_create.username)
                 mock_crud.create.assert_called_once()
+
+
+    @pytest.mark.asyncio
+    async def test_create_user_duplicate_email(self, mock_db, sample_user_data):
+        user_create = UserCreate(**sample_user_data)
+
+        with patch("src.app.api.v1.users.crud_users") as mock_crud:
+            mock_crud.exists = AsyncMock(return_value=True)
+
+            with pytest.raises(DuplicateValueException, match="Email is already registered"):
+                await write_user(Mock(), user_create, mock_db)

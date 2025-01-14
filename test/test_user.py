@@ -40,3 +40,4 @@ class TestWriteUser:
 
             with pytest.raises(DuplicateValueException, match="Email is already registered"):
                 await write_user(Mock(), user_create, mock_db)
+

@@ -66,3 +66,13 @@ class TestReadUser:
             mock_crud.get.assert_called_once_with(
                 db=mock_db, username=username, is_deleted=False, schema_to_select=UserRead
             )
+
+    @pytest.mark.asyncio
+    async def test_read_user_not_found(self, mock_db):
+        username = "nonexistent_user"
+
+        with patch("src.app.api.v1.users.crud_users") as mock_crud:
+            mock_crud.get = AsyncMock(return_value=None)
+
+            with pytest.raises(NotFoundException, match="User not found"):
+                await read_user(Mock(), username, mock_db)

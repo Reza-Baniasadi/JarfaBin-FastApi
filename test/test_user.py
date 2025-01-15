@@ -76,3 +76,41 @@ class TestReadUser:
 
             with pytest.raises(NotFoundException, match="User not found"):
                 await read_user(Mock(), username, mock_db)
+
+class TestReadUsers:
+
+    @pytest.mark.asyncio
+    async def test_read_users_success(self, mock_db):
+        mock_users_data = {"data": [{"id": 1}, {"id": 2}], "count": 2}
+
+        with patch("src.app.api.v1.users.crud_users") as mock_crud:
+            mock_crud.get_multi = AsyncMock(return_value=mock_users_data)
+
+            with patch("src.app.api.v1.users.paginated_response") as mock_paginated:
+                expected_response = {"data": [{"id": 1}, {"id": 2}], "pagination": {}}
+                mock_paginated.return_value = expected_response
+
+                result = await read_users(Mock(), mock_db, page=1, items_per_page=10)
+
+                assert result == expected_response
+                mock_crud.get_multi.assert_called_once()
+                mock_paginated.assert_called_once()
+
+class TestReadUsers:
+
+    @pytest.mark.asyncio
+    async def test_read_users_success(self, mock_db):
+        mock_users_data = {"data": [{"id": 1}, {"id": 2}], "count": 2}
+
+        with patch("src.app.api.v1.users.crud_users") as mock_crud:
+            mock_crud.get_multi = AsyncMock(return_value=mock_users_data)
+
+            with patch("src.app.api.v1.users.paginated_response") as mock_paginated:
+                expected_response = {"data": [{"id": 1}, {"id": 2}], "pagination": {}}
+                mock_paginated.return_value = expected_response
+
+                result = await read_users(Mock(), mock_db, page=1, items_per_page=10)
+
+                assert result == expected_response
+                mock_crud.get_multi.assert_called_once()
+                mock_paginated.assert_called_once()

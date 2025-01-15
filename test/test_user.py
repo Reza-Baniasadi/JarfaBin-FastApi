@@ -50,3 +50,19 @@ class TestWriteUser:
 
             with pytest.raises(DuplicateValueException, match="Username not available"):
                 await write_user(Mock(), user_create, mock_db)
+
+class TestReadUser:
+
+    @pytest.mark.asyncio
+    async def test_read_user_success(self, mock_db, sample_user_read):
+        username = "test_user"
+
+        with patch("src.app.api.v1.users.crud_users") as mock_crud:
+            mock_crud.get = AsyncMock(return_value=sample_user_read)
+
+            result = await read_user(Mock(), username, mock_db)
+
+            assert result == sample_user_read
+            mock_crud.get.assert_called_once_with(
+                db=mock_db, username=username, is_deleted=False, schema_to_select=UserRead
+            )

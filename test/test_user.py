@@ -114,3 +114,21 @@ class TestReadUsers:
                 assert result == expected_response
                 mock_crud.get_multi.assert_called_once()
                 mock_paginated.assert_called_once()
+
+class TestPatchUser:
+
+    @pytest.mark.asyncio
+    async def test_patch_user_success(self, mock_db, current_user_dict, sample_user_read):
+        username = current_user_dict["username"]
+        sample_user_read.username = username  
+        user_update = UserUpdate(name="New Name")
+
+        with patch("src.app.api.v1.users.crud_users") as mock_crud:
+            mock_crud.get = AsyncMock(return_value=sample_user_read)
+            mock_crud.exists = AsyncMock(return_value=False)
+            mock_crud.update = AsyncMock(return_value=None)
+
+            result = await patch_user(Mock(), user_update, username, current_user_dict, mock_db)
+
+            assert result == {"message": "User updated"}
+            mock_crud.update.assert_called_once()

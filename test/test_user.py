@@ -144,3 +144,23 @@ class TestPatchUser:
 
             with pytest.raises(ForbiddenException):
                 await patch_user(Mock(), user_update, username, current_user_dict, mock_db)
+
+
+class TestEraseUser:
+
+    @pytest.mark.asyncio
+    async def test_erase_user_success(self, mock_db, current_user_dict, sample_user_read):
+        username = current_user_dict["username"]
+        sample_user_read.username = username
+        token = "mock_token"
+
+        with patch("src.app.api.v1.users.crud_users") as mock_crud:
+            mock_crud.get = AsyncMock(return_value=sample_user_read)
+            mock_crud.delete = AsyncMock(return_value=None)
+
+            with patch("src.app.api.v1.users.blacklist_token", new_callable=AsyncMock) as mock_blacklist:
+                result = await erase_user(Mock(), username, current_user_dict, mock_db, token)
+
+                assert result == {"message": "User deleted"}
+                mock_crud.delete.assert_called_once_with(db=mock_db, username=username)
+                mock_blacklist.assert_called_once_with(token=token, db=mock_db)

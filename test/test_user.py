@@ -132,3 +132,15 @@ class TestPatchUser:
 
             assert result == {"message": "User updated"}
             mock_crud.update.assert_called_once()
+
+    @pytest.mark.asyncio
+    async def test_patch_user_forbidden(self, mock_db, current_user_dict, sample_user_read):
+        username = "different_user"
+        sample_user_read.username = username
+        user_update = UserUpdate(name="New Name")
+
+        with patch("src.app.api.v1.users.crud_users") as mock_crud:
+            mock_crud.get = AsyncMock(return_value=sample_user_read)
+
+            with pytest.raises(ForbiddenException):
+                await patch_user(Mock(), user_update, username, current_user_dict, mock_db)

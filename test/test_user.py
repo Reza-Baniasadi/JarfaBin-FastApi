@@ -164,3 +164,14 @@ class TestEraseUser:
                 assert result == {"message": "User deleted"}
                 mock_crud.delete.assert_called_once_with(db=mock_db, username=username)
                 mock_blacklist.assert_called_once_with(token=token, db=mock_db)
+
+    @pytest.mark.asyncio
+    async def test_erase_user_not_found(self, mock_db, current_user_dict):
+        username = "nonexistent_user"
+        token = "mock_token"
+
+        with patch("src.app.api.v1.users.crud_users") as mock_crud:
+            mock_crud.get = AsyncMock(return_value=None)
+
+            with pytest.raises(NotFoundException, match="User not found"):
+                await erase_user(Mock(), username, current_user_dict, mock_db, token)

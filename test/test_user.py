@@ -175,3 +175,16 @@ class TestEraseUser:
 
             with pytest.raises(NotFoundException, match="User not found"):
                 await erase_user(Mock(), username, current_user_dict, mock_db, token)
+
+
+    @pytest.mark.asyncio
+    async def test_erase_user_forbidden(self, mock_db, current_user_dict, sample_user_read):
+        username = "different_user"
+        sample_user_read.username = username
+        token = "mock_token"
+
+        with patch("src.app.api.v1.users.crud_users") as mock_crud:
+            mock_crud.get = AsyncMock(return_value=sample_user_read)
+
+            with pytest.raises(ForbiddenException):
+                await erase_user(Mock(), username, current_user_dict, mock_db, token)

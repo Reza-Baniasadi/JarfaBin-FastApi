@@ -71,7 +71,7 @@ async def read_posts(
         is_deleted=False,
     )
 
-    response: dict[str, Any] = paginated_response(crud_data=posts_data, page=page, items_per_page=items_per_page)
+    response: dict[Any] = paginated_response(crud_data=posts_data, page=page, items_per_page=items_per_page)
     return response
 
 

@@ -15,3 +15,11 @@ def create_crypto(db: Session, crypto: schemas.CryptoCurrencyCreate):
     db.commit()
     db.refresh(db_crypto)
     return db_crypto
+
+def update_crypto_price(db: Session, crypto_id: int, price_usd: float):
+    crypto = get_crypto(db, crypto_id)
+    if crypto:
+        crypto.price_usd = price_usd
+        db.commit()
+        db.refresh(crypto)
+    return crypto

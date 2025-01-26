@@ -23,3 +23,12 @@ def update_crypto_price(db: Session, crypto_id: int, price_usd: float):
         db.commit()
         db.refresh(crypto)
     return crypto
+
+def add_user_crypto(db: Session, user_crypto: schemas.UserCryptoCreate, user_id: int):
+    db_user_crypto = models.UserCrypto(
+        user_id=user_id, crypto_id=user_crypto.crypto_id, amount=user_crypto.amount
+    )
+    db.add(db_user_crypto)
+    db.commit()
+    db.refresh(db_user_crypto)
+    return db_user_crypto

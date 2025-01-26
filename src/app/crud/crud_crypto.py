@@ -32,3 +32,7 @@ def add_user_crypto(db: Session, user_crypto: schemas.UserCryptoCreate, user_id:
     db.commit()
     db.refresh(db_user_crypto)
     return db_user_crypto
+
+
+def get_user_cryptos(db: Session, user_id: int):
+    return db.query(models.UserCrypto).filter(models.UserCrypto.user_id == user_id).all()

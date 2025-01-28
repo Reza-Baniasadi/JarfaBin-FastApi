@@ -13,3 +13,7 @@ def create_crypto(crypto: schemas.CryptoCurrencyCreate, db: Session = Depends(ge
     if db_crypto:
         raise HTTPException(status_code=400, detail="Crypto already exists")
     return crud.create_crypto(db, crypto)
+
+@router.get("/", response_model=List[schemas.CryptoCurrency])
+def list_cryptos(db: Session = Depends(get_db)):
+    return db.query(crud.models.CryptoCurrency).all()

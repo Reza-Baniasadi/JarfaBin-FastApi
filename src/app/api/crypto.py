@@ -22,3 +22,9 @@ def list_cryptos(db: Session = Depends(get_db)):
 @router.post("/user", response_model=schemas.UserCrypto)
 def add_user_crypto(user_crypto: schemas.UserCryptoCreate, db: Session = Depends(get_db), user_id: int = 1):
     return crud.add_user_crypto(db, user_crypto, user_id)
+
+
+@router.post("/update-prices")
+async def update_prices(background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    background_tasks.add_task(tasks.update_all_crypto_prices, db)
+    return {"message": "Price update started in background"}

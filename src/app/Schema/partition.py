@@ -5,3 +5,13 @@ from datetime import datetime
 class PartitionBase(BaseModel):
     name: str
     description: Optional[str] = None
+
+class PartitionCreate(PartitionBase):
+    pass
+
+class PartitionOut(PartitionBase):
+    id: str
+    created_at: datetime
+    updated_at: datetime
+    size_bytes: int
+    record_count: int

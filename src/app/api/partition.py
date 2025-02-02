@@ -14,3 +14,10 @@ def create_partition(payload: PartitionCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_partition)
     return db_partition
+
+@router.get("/{partition_id}", response_model=PartitionOut)
+def get_partition(partition_id: str, db: Session = Depends(get_db)):
+    db_partition = db.query(Partition).filter(Partition.id == partition_id).first()
+    if db_partition is None:
+        raise HTTPException(status_code=404, detail="Partition not found")
+    return db_partition

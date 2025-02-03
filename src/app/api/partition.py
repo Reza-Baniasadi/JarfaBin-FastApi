@@ -36,3 +36,13 @@ def update_partition(partition_id: str, payload: PartitionUpdate, db: Session = 
     db.commit()
     db.refresh(db_partition)
     return db_partition
+
+
+@router.delete("/{partition_id}", status_code=204)
+def delete_partition(partition_id: str, db: Session = Depends(get_db)):
+    db_partition = db.query(Partition).filter(Partition.id == partition_id).first()
+    if db_partition is None:
+        raise HTTPException(status_code=404, detail="Partition not found")
+    db.delete(db_partition)
+    db.commit()
+    return None

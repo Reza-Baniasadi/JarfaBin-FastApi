@@ -20,3 +20,7 @@ def get_transaction(transaction_id: int, db: Session = Depends(get_db)):
     if db_transaction is None:
         raise HTTPException(status_code=404, detail="Transaction not found")
     return db_transaction
+
+@router.get("/category/{category}", response_model=list[TransactionOut])
+def get_transactions_by_category(category: str, db: Session = Depends(get_db)):
+    return db.query(Transaction).filter(Transaction.category == category).all()``

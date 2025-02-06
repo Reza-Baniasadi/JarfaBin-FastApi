@@ -13,3 +13,10 @@ def create_transaction(payload: TransactionCreate, db: Session = Depends(get_db)
     db.commit()
     db.refresh(db_transaction)
     return db_transaction
+
+@router.get("/{transaction_id}", response_model=TransactionOut)
+def get_transaction(transaction_id: int, db: Session = Depends(get_db)):
+    db_transaction = db.query(Transaction).filter(Transaction.id == transaction_id).first()
+    if db_transaction is None:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+    return db_transaction

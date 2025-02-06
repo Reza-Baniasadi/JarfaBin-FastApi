@@ -23,4 +23,4 @@ def get_transaction(transaction_id: int, db: Session = Depends(get_db)):
 
 @router.get("/category/{category}", response_model=list[TransactionOut])
 def get_transactions_by_category(category: str, db: Session = Depends(get_db)):
-    return db.query(Transaction).filter(Transaction.category == category).all()``
+    return db.query(Transaction).filter(Transaction.category == category).all()

@@ -24,3 +24,12 @@ def get_transaction(transaction_id: int, db: Session = Depends(get_db)):
 @router.get("/category/{category}", response_model=list[TransactionOut])
 def get_transactions_by_category(category: str, db: Session = Depends(get_db)):
     return db.query(Transaction).filter(Transaction.category == category).all()
+
+@router.delete("/{transaction_id}", status_code=204)
+def delete_transaction(transaction_id: int, db: Session = Depends(get_db)):
+    db_transaction = db.query(Transaction).filter(Transaction.id == transaction_id).first()
+    if db_transaction is None:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+    db.delete(db_transaction)
+    db.commit()
+    return None

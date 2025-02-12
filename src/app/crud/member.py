@@ -11,3 +11,6 @@ from pymysql.err import IntegrityError
 
 def get_member(db: Session, member_id: int):
     return db.query(Member).filter(Member.Member_id == member_id).first()
+
+def get_members(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(Member).offset(skip).limit(limit).all()

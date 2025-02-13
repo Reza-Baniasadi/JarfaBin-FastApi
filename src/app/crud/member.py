@@ -24,3 +24,11 @@ def update_member(db: Session, member_id: int, member_update: MemberUpdate):
     db.commit()
     db.refresh(member)
     return  {"message":"Member updated Successfully"}
+
+
+def delete_member(db: Session, member_id: int):
+    member = db.query(models.Member).filter(models.Member.Member_id == member_id).first()
+    if member:
+        db.delete(member)
+        db.commit()
+        return  {"message":"Member deleted Successfully"}

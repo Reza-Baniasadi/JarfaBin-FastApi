@@ -13,7 +13,7 @@ class Member(Base):
     Last_name = Column(String(20))
     Email = Column(String(150), index=True,unique=True, nullable=False)
     Country_Id = Column(Integer, ForeignKey("Country_Info.Country_Id", onupdate='CASCADE', ondelete='CASCADE'))
-    Contact_Number = Column(String(20),unique=True, nullable=False)
+    Contact_Number = Column(String(20),unique=True, nullable=True)
     username = Column(String(50), unique=True, index=True)
     password = Column(String(50))
     account_status = Column(Integer)

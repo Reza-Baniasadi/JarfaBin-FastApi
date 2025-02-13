@@ -18,3 +18,9 @@ class Member(Base):
     password = Column(String(50))
     account_status = Column(Integer)
     processed_by_id = Column(Integer, ForeignKey("Users.id", onupdate='CASCADE', ondelete='CASCADE'))
+
+    processed_by = relationship("User", backref="processed_by", passive_deletes=True)
+    deposits = relationship("Deposit", back_populates="member", passive_deletes=True)
+    withdrawals = relationship('Withdrawal', back_populates='member', passive_deletes=True)
+    transaction_logs = relationship('TransactionLog', back_populates='member', passive_deletes=True)
+    currency_info  = relationship('Country_Info', back_populates='member', passive_deletes=True)

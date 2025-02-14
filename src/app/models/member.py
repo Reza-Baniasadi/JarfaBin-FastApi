@@ -1,7 +1,6 @@
 from sqlalchemy.orm import relationship
-from sqlalchemy import Column, Integer, String,ForeignKey,Boolean,Float,DateTime
+from sqlalchemy import Column, Integer, String,ForeignKey,
 from database import Base
-from sqlalchemy import event
 
 
 class Member(Base):

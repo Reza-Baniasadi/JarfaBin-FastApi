@@ -10,3 +10,15 @@ import schemas,models
 from pymysql.err import IntegrityError
 
 
+
+
+def create_user(db: Session, user: schemas.UserCreate):
+    db_user = models.User(**user.dict())
+    try:
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="Username or email already exists")
+    return db_user

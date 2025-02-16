@@ -22,3 +22,6 @@ def create_user(db: Session, user: schemas.UserCreate):
         db.rollback()
         raise HTTPException(status_code=400, detail="Username or email already exists")
     return db_user
+
+def get_country_info(db: Session, country_id: int):
+    return db.query(models.Country_Info).filter(models.Country_Info.Country_Id == country_id).first()

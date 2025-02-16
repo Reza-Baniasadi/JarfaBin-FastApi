@@ -25,3 +25,6 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 def get_country_info(db: Session, country_id: int):
     return db.query(models.Country_Info).filter(models.Country_Info.Country_Id == country_id).first()
+
+def get_all_country_info(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Country_Info).offset(skip).limit(limit).all()

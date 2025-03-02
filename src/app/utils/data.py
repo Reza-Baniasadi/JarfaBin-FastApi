@@ -36,3 +36,26 @@ def read_any(file_bytes: bytes, filename: str) -> pd.DataFrame:
     except Exception:
         bio.seek(0)
         return pd.read_json(bio)
+
+def standardize_columns(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    df.columns = [c.strip().lower().replace(" ", "_") for c in df.columns]
+    # common aliases
+    alias = {
+    "ts": "timestamp",
+    "open_time": "timestamp",
+    "close_time": "timestamp_close",
+    "symbol": "ticker",
+    "pair": "ticker",
+    "price": "close",
+    }
+    df.rename(columns={k: v for k, v in alias.items() if k in df.columns}, inplace=True)
+    return df
+
+
+    _TS_UNITS = {
+    "s": 1,
+    "ms": 1_000,
+    "us": 1_000_000,
+    "ns": 1_000_000_000,
+    }

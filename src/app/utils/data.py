@@ -24,10 +24,13 @@ class CleanReport:
 def read_any(file_bytes: bytes, filename: str) -> pd.DataFrame:
     name = filename.lower()
     bio = BytesIO(file_bytes)
+
     if name.endswith(".csv") or name.endswith(".txt"):
         return pd.read_csv(bio)
+    
     if name.endswith(".json"):
         return pd.read_json(bio, lines=True)
+    
     if name.endswith(".parquet"):
         return pd.read_parquet(bio)
     try:
@@ -36,6 +39,7 @@ def read_any(file_bytes: bytes, filename: str) -> pd.DataFrame:
     except Exception:
         bio.seek(0)
         return pd.read_json(bio)
+
 
 def standardize_columns(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()

@@ -63,3 +63,18 @@ def standardize_columns(df: pd.DataFrame) -> pd.DataFrame:
     "us": 1_000_000,
     "ns": 1_000_000_000,
     }
+
+def _infer_ts_unit(series: pd.Series) -> Optional[str]:
+    s = series.dropna().astype(float)
+    if s.empty:
+        return None
+    m = s.median()
+    if 1e9 < m < 3e9:
+        return "s"
+    if 1e12 < m < 3e12:
+        return "ms"
+    if 1e15 < m < 3e15:
+        return "us"
+    if 1e18 < m < 3e18:
+        return "ns"
+        return None

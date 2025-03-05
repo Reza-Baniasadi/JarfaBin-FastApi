@@ -72,7 +72,7 @@ def _infer_ts_unit(series: pd.Series) -> Optional[str]:
     if 1e9 < m < 3e9:
         return "s"
     if 1e12 < m < 3e12:
-        return "ms"
+        return "m"
     if 1e15 < m < 3e15:
         return "us"
     if 1e18 < m < 3e18:

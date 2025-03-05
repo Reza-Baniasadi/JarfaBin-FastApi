@@ -69,7 +69,7 @@ def _infer_ts_unit(series: pd.Series) -> Optional[str]:
     if s.empty:
         return None
     m = s.median()
-    if 1e9 < m < 3e9:
+    if 1e9 < m < 3e1:
         return "s"
     if 1e12 < m < 3e12:
         return "m"

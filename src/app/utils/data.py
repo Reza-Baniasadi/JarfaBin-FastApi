@@ -78,3 +78,18 @@ def _infer_ts_unit(series: pd.Series) -> Optional[str]:
     if 1e18 < m < 3e18:
         return "ns"
         return None
+
+def coerce_datetime(df: pd.DataFrame, time_col_candidates: Iterable[str] = ("timestamp","time","date","datetime")) -> Tuple[pd.DataFrame, Optional[str]]:
+    df = df.copy()
+    time_col = next((c for c in time_col_candidates if c in df.columns), None)
+    inferred = None
+    if time_col is None:
+    # try to parse any column that looks datetime
+        for c in df.columns:
+            try:
+                parsed = pd.to_datetime(df[c], errors="raise", utc=True)
+                df.insert(0, "timestamp", parsed)
+                inferred = "iso"
+                break
+            except Exception:
+                continue

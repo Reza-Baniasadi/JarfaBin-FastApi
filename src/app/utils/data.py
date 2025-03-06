@@ -93,3 +93,8 @@ def coerce_datetime(df: pd.DataFrame, time_col_candidates: Iterable[str] = ("tim
                 break
             except Exception:
                 continue
+    else:
+        col = df[time_col]
+        if pd.api.types.is_numeric_dtype(col):
+            unit = _infer_ts_unit(col)
+            inferred = unit

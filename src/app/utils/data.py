@@ -98,3 +98,15 @@ def coerce_datetime(df: pd.DataFrame, time_col_candidates: Iterable[str] = ("tim
         if pd.api.types.is_numeric_dtype(col):
             unit = _infer_ts_unit(col)
             inferred = unit
+
+            if unit:
+                df["timestamp"] = pd.to_datetime(col, unit=unit, utc=True)
+            else:
+                df["timestamp"] = pd.to_datetime(col, utc=True, errors="coerce")
+        else:
+                df["timestamp"] = pd.to_datetime(col, utc=True, errors="coerce")
+        if time_col != "timestamp":
+                    pass
+        if "timestamp" in df.columns:
+                df = df.sort_values("timestamp").reset_index(drop=True)
+                return df, inferred

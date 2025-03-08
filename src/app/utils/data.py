@@ -110,3 +110,5 @@ def coerce_datetime(df: pd.DataFrame, time_col_candidates: Iterable[str] = ("tim
         if "timestamp" in df.columns:
                 df = df.sort_values("timestamp").reset_index(drop=True)
                 return df, inferred
+
+_NUMERIC_HINTS = ("open","high","low","close","price","volume","quote_volume","base_volume","vwap")

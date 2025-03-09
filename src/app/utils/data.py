@@ -112,3 +112,10 @@ def coerce_datetime(df: pd.DataFrame, time_col_candidates: Iterable[str] = ("tim
                 return df, inferred
 
 _NUMERIC_HINTS = ("open","high","low","close","price","volume","quote_volume","base_volume","wap")
+
+def coerce_numeric(df: pd.DataFrame) -> pd.DataFrame:
+        df = df.copy()
+        for c in df.columns:
+             if any(h in c for h in _NUMERIC_HINTS):
+                df[c] = pd.to_numeric(df[c], errors="coerce")
+                return df

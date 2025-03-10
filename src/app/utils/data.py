@@ -119,3 +119,13 @@ def coerce_numeric(df: pd.DataFrame) -> pd.DataFrame:
              if any(h in c for h in _NUMERIC_HINTS):
                 df[c] = pd.to_numeric(df[c], errors="coerce")
                 return df
+             
+def normalize_tickers(df: pd.DataFrame, mapping: Optional[Dict[str,str]] = None, base_quote_sep: Optional[str] = None) -> pd.DataFrame:
+    df = df.copy()
+    if "ticker" in df.columns:
+        df["ticker"] = df["ticker"].astype(str).str.strip().str.upper()
+    if base_quote_sep and base_quote_sep in df["ticker"].iloc[0]:
+     df["ticker"] = df["ticker"].str.replace(base_quote_sep, "", regex=False)
+    if mapping:
+        df["ticker"] = df["ticker"].map(lambda x: mapping.get(x, x))
+    return df

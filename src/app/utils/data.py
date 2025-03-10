@@ -130,6 +130,7 @@ def normalize_tickers(df: pd.DataFrame, mapping: Optional[Dict[str,str]] = None,
         df["ticker"] = df["ticker"].map(lambda x: mapping.get(x, x))
     return df
 
+# this function for drop dupes
 def drop_dupes(df: pd.DataFrame, keys: Optional[List[str]] = None) -> Tuple[pd.DataFrame, int]:
     df = df.copy()
     keys = keys or [c for c in ("timestamp","ticker") if c in df.columns] or df.columns.tolist()

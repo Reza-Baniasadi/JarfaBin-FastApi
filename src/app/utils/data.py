@@ -137,3 +137,14 @@ def drop_dupes(df: pd.DataFrame, keys: Optional[List[str]] = None) -> Tuple[pd.D
     before = len(df)
     df = df.drop_duplicates(subset=keys)
     return df, before - len(df)
+
+def fill_missing_ohlcv(df: pd.DataFrame, freq: str = "1min", method: Literal["ffill","bfill","none"] = "ffill") -> pd.DataFrame:
+    if "timestamp" not in df.columns:
+        return df
+    df = df.set_index("timestamp").sort_index()
+    agg = {c: ("sum" if "volume" in c else "last") for c in df.columns}
+    out = df.resample(freq).agg(agg)
+    if method != "none":
+        out = out.fillna(method=method)
+    out = out.reset_index()
+    return out

@@ -149,3 +149,16 @@ def fill_missing_ohlcv(df: pd.DataFrame, freq: str = "1min", method: Literal["ff
         out = out.fillna(method=method)
     out = out.reset_index()
     return out
+
+
+def detect_outliers_iqr(df: pd.DataFrame, cols: Iterable[str]) -> pd.DataFrame:
+    df = df.copy()
+    for c in cols:
+        if c not in df.columns:
+            continue
+    q1, q3 = df[c].quantile([0.25, 0.75])
+    iqr = q3 - q1
+    lo, hi = q1 - 1.5*iqr, q3 + 1.5*iqr
+    mask = (df[c] < lo) | (df[c] > hi)
+    df.loc[mask, c] = np.nan
+    return df

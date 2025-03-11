@@ -142,7 +142,7 @@ def fill_missing_ohlcv(df: pd.DataFrame, freq: str = "1min", method: Literal["ff
     if "timestamp" not in df.columns:
         return df
     df = df.set_index("timestamp").sort_index()
-    agg = {c: ("sum" if "volume" in c) for c in df.columns}
+    agg = {c: ("sum" if "volume" in c else "last") for c in df.columns}
     out = df.resample(freq).agg(agg)
     if method != "none":
         out = out.fillna(method=method)

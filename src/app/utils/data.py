@@ -138,6 +138,7 @@ def drop_dupes(df: pd.DataFrame, keys: Optional[List[str]] = None) -> Tuple[pd.D
     df = df.drop_duplicates(subset=keys)
     return df, before - len(df)
 
+
 def fill_missing_ohlcv(df: pd.DataFrame, freq: str = "1min", method: Literal["ffill","bfill","none"] = "ffill") -> pd.DataFrame:
     if "timestamp" not in df.columns:
         return df

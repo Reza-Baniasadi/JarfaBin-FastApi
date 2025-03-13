@@ -168,3 +168,7 @@ def validate_schema(df: pd.DataFrame, required: Iterable[str]) -> List[str]:
     return miss
 
 
+    def to_parquet_bytes(df: pd.DataFrame) -> bytes:
+        bio = BytesIO()
+        df.to_parquet(bio, index=False)
+        return bio.getvalue()

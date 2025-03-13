@@ -162,3 +162,9 @@ def detect_outliers_iqr(df: pd.DataFrame, cols: Iterable[str]) -> pd.DataFrame:
     mask = (df[c] < lo) | (df[c] > hi)
     df.loc[mask, c] = np.nan
     return df
+
+def validate_schema(df: pd.DataFrame, required: Iterable[str]) -> List[str]:
+    miss = [c for c in required if c not in df.columns]
+    return miss
+
+

@@ -186,3 +186,11 @@ def clean_crypto_df(
     warnings: List[str] = []
     rows_in = len(df)
     cols_before = df.columns.tolist()
+    df = standardize_columns(df)
+
+    df, inferred = coerce_datetime(df)
+    if inferred is None:
+        warnings.append("زمان‌بندی پیدا نشد یا نامشخص بود؛ سعی شد تبدیل مستقیم انجام شود.")
+    df = coerce_numeric(df)
+    df = normalize_tickers(df, symbol_map, base_quote_sep)
+    df, dups = drop_dupes(df)

@@ -194,3 +194,8 @@ def clean_crypto_df(
     df = coerce_numeric(df)
     df = normalize_tickers(df, symbol_map, base_quote_sep)
     df, dups = drop_dupes(df)
+
+    required = [c for c in ("timestamp","open","high","low","close","volume") if c in df.columns or c != "timestamp"]
+    miss = validate_schema(df, required=["timestamp"]) # حداقل ستون زمان
+    if miss:
+        warnings.append(f"ستون‌های ضروری یافت نشد: {miss}")

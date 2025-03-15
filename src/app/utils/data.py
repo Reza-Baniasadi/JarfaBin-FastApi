@@ -172,3 +172,17 @@ def to_parquet_bytes(df: pd.DataFrame) -> bytes:
     bio = BytesIO()
     df.to_parquet(bio, index=False)
     return bio.getvalue()
+
+
+def clean_crypto_df(
+    df: pd.DataFrame,
+    *,
+    symbol_map: Optional[Dict[str,str]] = None,
+    base_quote_sep: Optional[str] = "/",
+    resample_to: Optional[str] = None,
+    outlier_cols: Optional[Iterable[str]] = ("open","high","low","close","volume"),
+    freq_fill: Literal["ffill","bfill","none"] = "ffill",
+    ) -> Tuple[pd.DataFrame, CleanReport]:
+    warnings: List[str] = []
+    rows_in = len(df)
+    cols_before = df.columns.tolist()

@@ -201,3 +201,21 @@ def clean_crypto_df(
         warnings.append(f"ستون‌های ضروری یافت نشد: {miss}")
     if outlier_cols:
         df = detect_outliers_iqr(df, [c for c in outlier_cols if c in df.columns])
+    
+    if resample_to:
+        try:
+            df = fill_missing_ohlcv(df, resample_to, method=freq_fill)
+        except Exception as e:
+            warnings.append(f"خطای بازنمونه‌گیری: {e}")
+
+
+        report = CleanReport(
+        rows_in=rows_in,
+        rows_out=len(df),
+        duplicates_dropped=dups,
+        cols_before=cols_before,
+        cols_after=df.columns.tolist(),
+        inferred_ts_unit=inferred,
+        warnings=warnings,
+        )
+        return df, report

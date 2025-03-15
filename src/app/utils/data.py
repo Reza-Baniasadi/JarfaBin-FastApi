@@ -199,3 +199,5 @@ def clean_crypto_df(
     miss = validate_schema(df, required=["timestamp"])
     if miss:
         warnings.append(f"ستون‌های ضروری یافت نشد: {miss}")
+    if outlier_cols:
+        df = detect_outliers_iqr(df, [c for c in outlier_cols if c in df.columns])

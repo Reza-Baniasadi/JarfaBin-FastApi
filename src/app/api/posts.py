@@ -99,7 +99,7 @@ async def read_post(
 @cache("{username}_post_cache", resource_id_name="id", pattern_to_invalidate_extra=["{username}_posts:*"])
 async def patch_post(
     request: Request,
-    username: str,
+    username: any,
     id: int,
     values: PostUpdate,
     current_user: Annotated[dict, Depends(get_current_user)],

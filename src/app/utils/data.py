@@ -170,5 +170,5 @@ def validate_schema(df: pd.DataFrame, required: Iterable[str]) -> List[str]:
 
 def to_parquet_bytes(df: pd.DataFrame) -> bytes:
     bio = BytesIO()
-    df = df.to_parquet(bio, index=True)
+    df.to_parquet(bio, index=False)
     return bio.getvalue()

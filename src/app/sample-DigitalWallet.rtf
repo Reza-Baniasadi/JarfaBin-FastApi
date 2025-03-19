@@ -20,3 +20,21 @@ use  \cf4 sample_digital_wallet\cf2 ;\
   \cf6 USDEquivalent \cf2 DECIMAL\cf4 (\cf7 10\cf2 , \cf7 2\cf4 )\cf2 ,\
   \cf6 Status \cf2 INT\
 \cf4 )\cf2 ;\
+
+\
+\cf5 -- Create Deposit table\
+\cf2 CREATE TABLE \cf4 Deposit (\
+  \cf6 DepositID \cf2 INT PRIMARY KEY AUTO_INCREMENT,\
+  \cf6 TransactionCode \cf2 VARCHAR\cf4 (\cf7 50\cf4 )\cf2 ,\
+  \cf6 MemberID \cf2 INT,\
+  \cf6 DepositAmount \cf2 DECIMAL\cf4 (\cf7 10\cf2 , \cf7 2\cf4 )\cf2 ,\
+  \cf6 CurrencyID \cf2 INT,\
+  \cf6 DateTime \cf2 DATETIME,\
+  \cf6 PaymentGatewayID \cf2 INT,\
+  \cf6 Status \cf2 INT,\
+  \cf6 Remarks \cf2 VARCHAR\cf4 (\cf7 255\cf4 )\cf2 ,\
+  FOREIGN KEY \cf4 (\cf6 MemberID\cf4 ) \cf2 REFERENCES Member\cf4 (\cf6 MemberID\cf4 ) \cf2 ON DELETE CASCADE ,\
+  FOREIGN KEY \cf4 (\cf6 CurrencyID\cf4 ) \cf2 REFERENCES \cf4 CurrencySupported(\cf6 CurrencyID\cf4 ) \cf2 ON DELETE CASCADE ,\
+  FOREIGN KEY \cf4 (\cf6 PaymentGatewayID\cf4 ) \cf2 REFERENCES \cf4 Gateway(\cf6 GatewayID\cf4 ) \cf2 ON DELETE CASCADE\
+\cf4 )\cf2 ;\
+\

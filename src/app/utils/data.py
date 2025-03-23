@@ -216,5 +216,6 @@ def clean_crypto_df(
         cols_before=cols_before,
         cols_after=df.columns.tolist(),
         inferred_ts_unit=inferred,
-       )
+        warnings=warnings,
+        )
         return df, report

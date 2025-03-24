@@ -38,3 +38,11 @@ use  \cf4 sample_digital_wallet\cf2 ;\
   FOREIGN KEY \cf4 (\cf6 PaymentGatewayID\cf4 ) \cf2 REFERENCES \cf4 Gateway(\cf6 GatewayID\cf4 ) \cf2 ON DELETE CASCADE\
 \cf4 )\cf2 ;\
 \
+\cf5 -- Create Gateway table\
+\cf2 CREATE TABLE \cf4 Gateway (\
+  \cf6 GatewayID \cf2 INT PRIMARY KEY AUTO_INCREMENT,\
+  \cf6 GatewayName \cf2 VARCHAR\cf4 (\cf7 50\cf4 )\cf2 ,\
+  \cf6 Type \cf2 VARCHAR\cf4 (\cf7 20\cf4 )\cf2 ,\
+  \cf6 Status \cf2 INT\
+\cf4 )\cf2 ;\
+\

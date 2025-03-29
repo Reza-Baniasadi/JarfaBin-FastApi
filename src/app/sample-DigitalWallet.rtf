@@ -46,3 +46,13 @@ use  \cf4 sample_digital_wallet\cf2 ;\
   \cf6 Status \cf2 INT\
 \cf4 )\cf2 ;\
 \
+\
+\cf5 -- Create User table\
+\cf2 CREATE TABLE User \cf4 (\
+  \cf6 UserID \cf2 INT PRIMARY KEY AUTO_INCREMENT,\
+  \cf6 Username \cf2 VARCHAR\cf4 (\cf7 50\cf4 )\cf2 ,\
+  \cf6 Password \cf2 VARCHAR\cf4 (\cf7 50\cf4 )\cf2 ,\
+  \cf6 CompleteName \cf2 VARCHAR\cf4 (\cf7 100\cf4 )\cf2 ,\
+  \cf6 EmailAddress \cf2 VARCHAR\cf4 (\cf7 100\cf4 )\
+)\cf2 ;\
+\

@@ -56,3 +56,18 @@ use  \cf4 sample_digital_wallet\cf2 ;\
   \cf6 EmailAddress \cf2 VARCHAR\cf4 (\cf7 100\cf4 )\
 )\cf2 ;\
 \
+\cf5 -- Create Member table\
+\cf2 CREATE TABLE Member \cf4 (\
+  \cf6 MemberID \cf2 INT PRIMARY KEY AUTO_INCREMENT,\
+  \cf6 FirstName \cf2 VARCHAR\cf4 (\cf7 50\cf4 )\cf2 ,\
+  \cf6 MiddleName \cf2 VARCHAR\cf4 (\cf7 50\cf4 )\cf2 ,\
+  \cf6 LastName \cf2 VARCHAR\cf4 (\cf7 50\cf4 )\cf2 ,\
+  \cf6 EmailAddress \cf2 VARCHAR\cf4 (\cf7 100\cf4 )\cf2 ,\
+  \cf6 Country \cf2 VARCHAR\cf4 (\cf7 50\cf4 )\cf2 ,\
+  \cf6 ContactNumber \cf2 VARCHAR\cf4 (\cf7 20\cf4 )\cf2 ,\
+  \cf6 Username \cf2 VARCHAR\cf4 (\cf7 50\cf4 )\cf2 ,\
+  \cf6 Password \cf2 VARCHAR\cf4 (\cf7 50\cf4 )\cf2 ,\
+  \cf6 AccountStatus \cf2 INT,\
+  \cf6 ProcessedBy \cf2 INT,\
+  FOREIGN KEY \cf4 (\cf6 ProcessedBy\cf4 ) \cf2 REFERENCES User\cf4 (\cf6 UserID\cf4 ) \cf2 ON DELETE CASCADE\
+\cf4 )\cf2 ;\

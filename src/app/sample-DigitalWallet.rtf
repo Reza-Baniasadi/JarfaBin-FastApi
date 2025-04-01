@@ -129,3 +129,29 @@ use  \cf4 sample_digital_wallet\cf2 ;\
   \cf4 (\cf8 'James'\cf2 , \cf8 'M.'\cf2 , \cf8 'Adams'\cf2 , \cf8 'james.adams@example.com'\cf2 , \cf8 'United States'\cf2 , \cf8 '+1 777-888-9999'\cf2 , \cf8 'jamesadams'\cf2 , \cf8 'password789'\cf2 , \cf7 1\cf2 , \cf7 1\cf4 )\cf2 ,\
   \cf4 (\cf8 'Isabella'\cf2 , \cf8 'N.'\cf2 , \cf8 'Campbell'\cf2 , \cf8 'isabella.campbell@example.com'\cf2 , \cf8 'United States'\cf2 , \cf8 '+1 111-222-3333'\cf2 , \cf8 'isabellacampbell'\cf2 , \cf8 'passwordabc'\cf2 , \cf7 1\cf2 , \cf7 2\cf4 )\cf2 ;\
 \
+\
+\cf5 -- Insert sample values into Gateway table\
+\cf2 INSERT INTO \cf4 Gateway (\cf6 GatewayName\cf2 , \cf6 Type\cf2 , \cf6 Status\cf4 )\
+\cf2 VALUES\
+  \cf4 (\cf8 'coins.ph'\cf2 , \cf8 'automatic'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'gcash'\cf2 , \cf8 'automatic'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'paymaya'\cf2 , \cf8 'automatic'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'paypal'\cf2 , \cf8 'manual'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'stripe'\cf2 , \cf8 'manual'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'skrill'\cf2 , \cf8 'manual'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'neteller'\cf2 , \cf8 'manual'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'venmo'\cf2 , \cf8 'manual'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'cashapp'\cf2 , \cf8 'manual'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'applepay'\cf2 , \cf8 'manual'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'googlepay'\cf2 , \cf8 'manual'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'amazonpay'\cf2 , \cf8 'manual'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'aliexpress'\cf2 , \cf8 'manual'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'bitpay'\cf2 , \cf8 'manual'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'venmo'\cf2 , \cf8 'manual'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'coinbase'\cf2 , \cf8 'manual'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'revolut'\cf2 , \cf8 'manual'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'paysafecard'\cf2 , \cf8 'manual'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'transferwise'\cf2 , \cf8 'manual'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'webmoney'\cf2 , \cf8 'manual'\cf2 , \cf7 0\cf4 )\cf2 ,\
+  \cf4 (\cf8 'yandexmoney'\cf2 , \cf8 'manual'\cf2 , \cf7 0\cf4 )\cf2 ;\
+\

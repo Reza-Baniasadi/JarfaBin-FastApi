@@ -73,3 +73,7 @@ symbol_map_json: Optional[str] = Form(None),
     "bytes": len(data),
     }
     )
+
+
+class SymbolMapBody(BaseModel):
+    symbols: Dict[str,str] = Field(..., description="{'XBTUSDT': 'BTCUSDT', 'ETH-USD': 'ETHUSD'}")  

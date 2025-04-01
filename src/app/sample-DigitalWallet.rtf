@@ -111,3 +111,21 @@ use  \cf4 sample_digital_wallet\cf2 ;\
   \cf4 (\cf8 'nathanking'\cf2 , \cf8 'password19'\cf2 , \cf8 'Nathan King'\cf2 , \cf8 'nathanking@example.com'\cf4 )\cf2 ,\
   \cf4 (\cf8 'oliverwright'\cf2 , \cf8 'password20'\cf2 , \cf8 'Oliver Wright'\cf2 , \cf8 'oliverwright@example.com'\cf4 )\cf2 ;\
 \
+\cf5 -- Insert sample values into Member table\
+\cf2 INSERT INTO Member \cf4 (\cf6 FirstName\cf2 , \cf6 MiddleName\cf2 , \cf6 LastName\cf2 , \cf6 EmailAddress\cf2 , \cf6 Country\cf2 , \cf6 ContactNumber\cf2 , \cf6 Username\cf2 , \cf6 Password\cf2 , \cf6 AccountStatus\cf2 , \cf6 ProcessedBy\cf4 )\
+\cf2 VALUES\
+  \cf4 (\cf8 'John'\cf2 , \cf8 'A.'\cf2 , \cf8 'Doe'\cf2 , \cf8 'john.doe@example.com'\cf2 , \cf8 'United States'\cf2 , \cf8 '+1 123-456-7890'\cf2 , \cf8 'johndoe'\cf2 , \cf8 'password123'\cf2 , \cf7 1\cf2 , \cf7 1\cf4 )\cf2 ,\
+  \cf4 (\cf8 'Jane'\cf2 , \cf8 'B.'\cf2 , \cf8 'Smith'\cf2 , \cf8 'jane.smith@example.com'\cf2 , \cf8 'United States'\cf2 , \cf8 '+1 987-654-3210'\cf2 , \cf8 'janesmith'\cf2 , \cf8 'password456'\cf2 , \cf7 1\cf2 , \cf7 1\cf4 )\cf2 ,\
+  \cf4 (\cf8 'Michael'\cf2 , \cf8 'C.'\cf2 , \cf8 'Johnson'\cf2 , \cf8 'michael.johnson@example.com'\cf2 , \cf8 'United States'\cf2 , \cf8 '+1 555-123-4567'\cf2 , \cf8 'mikejohnson'\cf2 , \cf8 'password789'\cf2 , \cf7 1\cf2 , \cf7 2\cf4 )\cf2 ,\
+  \cf4 (\cf8 'Sarah'\cf2 , \cf8 'D.'\cf2 , \cf8 'Williams'\cf2 , \cf8 'sarah.williams@example.com'\cf2 , \cf8 'United States'\cf2 , \cf8 '+1 888-555-1234'\cf2 , \cf8 'sarahwilliams'\cf2 , \cf8 'passwordabc'\cf2 , \cf7 0\cf2 , \cf7 2\cf4 )\cf2 ,\
+  \cf4 (\cf8 'David'\cf2 , \cf8 'E.'\cf2 , \cf8 'Brown'\cf2 , \cf8 'david.brown@example.com'\cf2 , \cf8 'United States'\cf2 , \cf8 '+1 444-555-6789'\cf2 , \cf8 'davidbrown'\cf2 , \cf8 'passwordxyz'\cf2 , \cf7 0\cf2 , \cf7 1\cf4 )\cf2 ,\
+  \cf4 (\cf8 'Emily'\cf2 , \cf8 'F.'\cf2 , \cf8 'Taylor'\cf2 , \cf8 'emily.taylor@example.com'\cf2 , \cf8 'United States'\cf2 , \cf8 '+1 777-888-9999'\cf2 , \cf8 'emilytaylor'\cf2 , \cf8 'password123'\cf2 , \cf7 0\cf2 , \cf7 2\cf4 )\cf2 ,\
+  \cf4 (\cf8 'Christopher'\cf2 , \cf8 'G.'\cf2 , \cf8 'Anderson'\cf2 , \cf8 'christopher.anderson@example.com'\cf2 , \cf8 'United States'\cf2 , \cf8 '+1 222-333-4444'\cf2 , \cf8 'chrisanderson'\cf2 , \cf8 'password456'\cf2 , \cf7 0\cf2 , \cf7 1\cf4 )\cf2 ,\
+  \cf4 (\cf8 'Olivia'\cf2 , \cf8 'H.'\cf2 , \cf8 'Clark'\cf2 , \cf8 'olivia.clark@example.com'\cf2 , \cf8 'United States'\cf2 , \cf8 '+1 999-888-7777'\cf2 , \cf8 'oliviaclark'\cf2 , \cf8 'password789'\cf2 , \cf7 1\cf2 , \cf7 2\cf4 )\cf2 ,\
+  \cf4 (\cf8 'Daniel'\cf2 , \cf8 'I.'\cf2 , \cf8 'Allen'\cf2 , \cf8 'daniel.allen@example.com'\cf2 , \cf8 'United States'\cf2 , \cf8 '+1 666-555-4444'\cf2 , \cf8 'danielallen'\cf2 , \cf8 'passwordabc'\cf2 , \cf7 1\cf2 , \cf7 1\cf4 )\cf2 ,\
+  \cf4 (\cf8 'Sophia'\cf2 , \cf8 'J.'\cf2 , \cf8 'Young'\cf2 , \cf8 'sophia.young@example.com'\cf2 , \cf8 'United States'\cf2 , \cf8 '+1 111-222-3333'\cf2 , \cf8 'sophiayoung'\cf2 , \cf8 'passwordxyz'\cf2 , \cf7 1\cf2 , \cf7 2\cf4 )\cf2 ,\
+  \cf4 (\cf8 'Matthew'\cf2 , \cf8 'K.'\cf2 , \cf8 'Hall'\cf2 , \cf8 'matthew.hall@example.com'\cf2 , \cf8 'United States'\cf2 , \cf8 '+1 333-444-5555'\cf2 , \cf8 'matthewhall'\cf2 , \cf8 'password123'\cf2 , \cf7 1\cf2 , \cf7 1\cf4 )\cf2 ,\
+  \cf4 (\cf8 'Ava'\cf2 , \cf8 'L.'\cf2 , \cf8 'Green'\cf2 , \cf8 'ava.green@example.com'\cf2 , \cf8 'United States'\cf2 , \cf8 '+1 555-666-7777'\cf2 , \cf8 'avagreen'\cf2 , \cf8 'password456'\cf2 , \cf7 1\cf2 , \cf7 2\cf4 )\cf2 ,\
+  \cf4 (\cf8 'James'\cf2 , \cf8 'M.'\cf2 , \cf8 'Adams'\cf2 , \cf8 'james.adams@example.com'\cf2 , \cf8 'United States'\cf2 , \cf8 '+1 777-888-9999'\cf2 , \cf8 'jamesadams'\cf2 , \cf8 'password789'\cf2 , \cf7 1\cf2 , \cf7 1\cf4 )\cf2 ,\
+  \cf4 (\cf8 'Isabella'\cf2 , \cf8 'N.'\cf2 , \cf8 'Campbell'\cf2 , \cf8 'isabella.campbell@example.com'\cf2 , \cf8 'United States'\cf2 , \cf8 '+1 111-222-3333'\cf2 , \cf8 'isabellacampbell'\cf2 , \cf8 'passwordabc'\cf2 , \cf7 1\cf2 , \cf7 2\cf4 )\cf2 ;\
+\

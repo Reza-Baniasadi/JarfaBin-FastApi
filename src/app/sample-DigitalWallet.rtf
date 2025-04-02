@@ -181,3 +181,23 @@ use  \cf4 sample_digital_wallet\cf2 ;\
   \cf4 (\cf8 'Binance USD'\cf2 , \cf8 'BUSD'\cf2 , \cf7 1.00\cf2 , \cf7 0\cf4 )\cf2 ;\
 \
 \
+\cf5 -- Insert sample values into Withdrawal table\
+\
+\cf2 INSERT INTO \cf4 Withdrawal (\cf6 TransactionCode\cf2 , \cf6 MemberID\cf2 , \cf6 Amount\cf2 , \cf6 Charged\cf2 , \cf6 ToReceive\cf2 , \cf6 DateTime\cf2 , \cf6 Method\cf2 , \cf6 Status\cf2 , \cf6 Remarks\cf4 )\
+\cf2 VALUES\
+  \cf4 (\cf8 'W001'\cf2 , \cf7 1\cf2 , \cf7 50.00\cf2 , \cf7 2.00\cf2 , \cf7 48.00\cf2 , \cf8 '2023-05-01 09:00:00'\cf2 , \cf8 'Bank Transfer'\cf2 , \cf7 1\cf2 , \cf8 'Successful withdrawal'\cf4 )\cf2 ,\
+  \cf4 (\cf8 'W002'\cf2 , \cf7 2\cf2 , \cf7 75.00\cf2 , \cf7 3.00\cf2 , \cf7 72.00\cf2 , \cf8 '2023-05-02 10:30:00'\cf2 , \cf8 'PayPal'\cf2 , \cf7 1\cf2 , \cf8 'Successful withdrawal'\cf4 )\cf2 ,\
+  \cf4 (\cf8 'W003'\cf2 , \cf7 3\cf2 , \cf7 100.00\cf2 , \cf7 4.00\cf2 , \cf7 96.00\cf2 , \cf8 '2023-05-03 13:45:00'\cf2 , \cf8 'Bank Transfer'\cf2 , \cf7 1\cf2 , \cf8 'Successful withdrawal'\cf4 )\cf2 ,\
+  \cf4 (\cf8 'W004'\cf2 , \cf7 4\cf2 , \cf7 50.00\cf2 , \cf7 2.00\cf2 , \cf7 48.00\cf2 , \cf8 '2023-05-04 15:20:00'\cf2 , \cf8 'PayPal'\cf2 , \cf7 1\cf2 , \cf8 'Successful withdrawal'\cf4 )\cf2 ,\
+  \cf4 (\cf8 'W005'\cf2 , \cf7 5\cf2 , \cf7 75.00\cf2 , \cf7 3.00\cf2 , \cf7 72.00\cf2 , \cf8 '2023-05-05 17:15:00'\cf2 , \cf8 'Bank Transfer'\cf2 , \cf7 1\cf2 , \cf8 'Successful withdrawal'\cf4 )\cf2 ,\
+  \cf4 (\cf8 'W006'\cf2 , \cf7 6\cf2 , \cf7 100.00\cf2 , \cf7 4.00\cf2 , \cf7 96.00\cf2 , \cf8 '2023-05-06 09:30:00'\cf2 , \cf8 'PayPal'\cf2 , \cf7 1\cf2 , \cf8 'Successful withdrawal'\cf4 )\cf2 ,\
+  \cf4 (\cf8 'W007'\cf2 , \cf7 7\cf2 , \cf7 50.00\cf2 , \cf7 2.00\cf2 , \cf7 48.00\cf2 , \cf8 '2023-05-07 11:45:00'\cf2 , \cf8 'Bank Transfer'\cf2 , \cf7 1\cf2 , \cf8 'Successful withdrawal'\cf4 )\cf2 ,\
+  \cf4 (\cf8 'W008'\cf2 , \cf7 8\cf2 , \cf7 75.00\cf2 , \cf7 3.00\cf2 , \cf7 72.00\cf2 , \cf8 '2023-05-08 14:00:00'\cf2 , \cf8 'PayPal'\cf2 , \cf7 1\cf2 , \cf8 'Successful withdrawal'\cf4 )\cf2 ,\
+  \cf4 (\cf8 'W009'\cf2 , \cf7 9\cf2 , \cf7 100.00\cf2 , \cf7 4.00\cf2 , \cf7 96.00\cf2 , \cf8 '2023-05-09 16:30:00'\cf2 , \cf8 'Bank Transfer'\cf2 , \cf7 1\cf2 , \cf8 'Successful withdrawal'\cf4 )\cf2 ,\
+  \cf4 (\cf8 'W010'\cf2 , \cf7 10\cf2 , \cf7 50.00\cf2 , \cf7 2.00\cf2 , \cf7 48.00\cf2 , \cf8 '2023-05-10 18:45:00'\cf2 , \cf8 'PayPal'\cf2 , \cf7 1\cf2 , \cf8 'Successful withdrawal'\cf4 )\cf2 ,\
+  \cf4 (\cf8 'W011'\cf2 , \cf7 11\cf2 , \cf7 75.00\cf2 , \cf7 3.00\cf2 , \cf7 72.00\cf2 , \cf8 '2023-05-11 09:15:00'\cf2 , \cf8 'Bank Transfer'\cf2 , \cf7 1\cf2 , \cf8 'Successful withdrawal'\cf4 )\cf2 ,\
+  \cf4 (\cf8 'W012'\cf2 , \cf7 12\cf2 , \cf7 100.00\cf2 , \cf7 4.00\cf2 , \cf7 96.00\cf2 , \cf8 '2023-05-12 11:30:00'\cf2 , \cf8 'PayPal'\cf2 , \cf7 1\cf2 , \cf8 'Successful withdrawal'\cf4 )\cf2 ,\
+  \cf4 (\cf8 'W013'\cf2 , \cf7 13\cf2 , \cf7 50.00\cf2 , \cf7 2.00\cf2 , \cf7 48.00\cf2 , \cf8 '2023-05-13 13:55:00'\cf2 , \cf8 'Bank Transfer'\cf2 , \cf7 1\cf2 , \cf8 'Successful withdrawal'\cf4 )\cf2 ,\
+  \cf4 (\cf8 'W014'\cf2 , \cf7 14\cf2 , \cf7 75.00\cf2 , \cf7 3.00\cf2 , \cf7 72.00\cf2 , \cf8 '2023-05-14 16:10:00'\cf2 , \cf8 'PayPal'\cf2 , \cf7 1\cf2 , \cf8 'Successful withdrawal'\cf4 )\cf2 ;\
+\
+\

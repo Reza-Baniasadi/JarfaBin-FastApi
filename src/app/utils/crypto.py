@@ -77,3 +77,13 @@ symbol_map_json: Optional[str] = Form(None),
 
 class SymbolMapBody(BaseModel):
     symbols: Dict[str,str] = Field(..., description="{'XBTUSDT': 'BTCUSDT', 'ETH-USD': 'ETHUSD'}")  
+
+
+@app.post("/symbols/normalize")
+async def normalize_symbols(file: UploadFile = File(...), body: SymbolMapBody = None):
+    from utils.file_utils import read_any, standardize_columns, normalize_tickers # type: ignore
+    raw = await file.read()
+    df = read_any(raw, file.filename)
+    df = standardize_columns(df)
+    df = normalize_tickers(df, mapping=(body.symbols if body else None), base_quote_sep='/')
+    return {"head": df.head(10).to_dict(orient="records")}

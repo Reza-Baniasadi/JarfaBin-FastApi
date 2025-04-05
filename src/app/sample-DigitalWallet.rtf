@@ -247,3 +247,29 @@ SELECT \cf9 *\
 \cf2 FROM \cf4 TransactionLog\
 \cf2 WHERE \cf6 MemberID \cf4 = \cf7 2\cf2 ;\
 \
+\
+SELECT\
+  \cf4 m.\cf6 MemberID\cf2 ,\
+  \cf4 m.\cf6 Username\cf2 ,\
+  \cf4 m.\cf6 EmailAddress\cf2 ,\
+  
+\f1\i \cf9 COALESCE
+\f0\i0 \cf4 (
+\f1\i \cf9 SUM
+\f0\i0 \cf4 (d.\cf6 DepositAmount\cf4 )\cf2 , \cf7 0\cf4 ) - 
+\f1\i \cf9 COALESCE
+\f0\i0 \cf4 (
+\f1\i \cf9 SUM
+\f0\i0 \cf4 (w.\cf6 Amount\cf4 )\cf2 , \cf7 0\cf4 ) \cf2 AS \cf4 AccountBalance\
+\cf2 FROM\
+  Member \cf4 m\
+\cf2 LEFT JOIN\
+  \cf4 Deposit d \cf2 ON \cf4 m.\cf6 MemberID \cf4 = d.\cf6 MemberID\
+\cf2 LEFT JOIN\
+  \cf4 Withdrawal w \cf2 ON \cf4 m.\cf6 MemberID \cf4 = w.\cf6 MemberID\
+\cf2 WHERE\
+  \cf4 m.\cf6 MemberID \cf4 = \cf7 2\
+\cf2 GROUP BY\
+  \cf4 m.\cf6 MemberID\cf2 , \cf4 m.\cf6 Username\cf2 , \cf4 m.\cf6 EmailAddress\cf2 ;\
+\
+\

@@ -35,3 +35,12 @@ async def predict_with_model(req: ModelRequest):
     payload = req.dict(exclude_none=True)
     model_resp = await call_model_endpoint(payload)
     return ModelResponse(predictions=model_resp.get("predictions"), raw=model_resp)
+
+
+@app.get("/check-config")
+async def check_config():
+    return {
+        "ARZDIGITAL_API_KEY": settings.ARZDIGITAL_API_KEY,
+        "MODEL_ENDPOINT": settings.MODEL_ENDPOINT,
+        "MODEL_API_KEY": settings.MODEL_API_KEY
+    }

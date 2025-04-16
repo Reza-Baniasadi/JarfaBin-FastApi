@@ -52,5 +52,5 @@ USER app
 
 WORKDIR /code
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "app.main:app", "--host", "1.1.1.1", "--port", "8000", "--reload"]
 

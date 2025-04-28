@@ -20,7 +20,7 @@ def get_cache(key: str):
     return redis_client.get(key)
 
 
-def is_rate_limited(ip: str, limit: int = 10, window: int = 60) -> bool:
+def is_rate_limited(ip: str, limit: int = 20, window: int = 60) -> bool:
     key = f"ratelimit:{ip}"
     count = redis_client.incr(key)
     if count == 1:

@@ -11,3 +11,6 @@ handler = logging.StreamHandler()
 formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
 handler.setFormatter(formatter)
 logger.addHandler(handler)
+
+def set_cache(key: str, value: str, ttl: int = 30):
+    redis_client.setex(key, ttl, value)

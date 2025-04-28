@@ -24,6 +24,5 @@ base_quote_sep: Optional[str] = Form('/'),
 freq_fill: str = Form('ffill'),
 symbol_map_json: Optional[str] = Form(None),
 ):
-
     raw = await file.read()
     df = read_any(raw, file.filename)

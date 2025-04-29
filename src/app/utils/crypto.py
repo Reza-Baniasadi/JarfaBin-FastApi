@@ -36,3 +36,10 @@ symbol_map_json: Optional[str] = Form(None),
     resample_to=resample_to,
     freq_fill=freq_fill,
     )
+    preview = cleaned.head(10).to_dict(orient="records")
+    return JSONResponse(
+    content={
+    "report": report.__dict__,
+    "preview": preview,
+    }
+    )

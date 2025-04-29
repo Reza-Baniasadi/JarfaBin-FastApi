@@ -26,3 +26,13 @@ symbol_map_json: Optional[str] = Form(None),
 ):
     raw = await file.read()
     df = read_any(raw, file.filename)
+    symbol_map = json.loads(symbol_map_json) if symbol_map_json else None
+
+
+    cleaned, report = clean_crypto_df(
+    df,
+    symbol_map=symbol_map,
+    base_quote_sep=base_quote_sep or None,
+    resample_to=resample_to,
+    freq_fill=freq_fill,
+    )

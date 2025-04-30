@@ -43,3 +43,33 @@ symbol_map_json: Optional[str] = Form(None),
     "preview": preview,
     }
     )
+
+
+
+@app.post("/files/clean/parquet")
+async def clean_file_parquet(
+file: UploadFile = File(...),
+resample_to: Optional[str] = Form(None),
+base_quote_sep: Optional[str] = Form('/'),
+freq_fill: str = Form('ffill'),
+symbol_map_json: Optional[str] = Form(None),
+):
+
+    raw = await file.read()
+    df = read_any(raw, file.filename)
+    symbol_map = json.loads(symbol_map_json) if symbol_map_json else None
+
+
+    cleaned, report = clean_crypto_df(
+    df,
+    symbol_map=symbol_map,
+    base_quote_sep=base_quote_sep or None,
+    resample_to=resample_to,
+    freq_fill=freq_fill,
+    )
+    data = to_parquet_bytes(cleaned)
+    return JSONResponse(
+    content={
+    "bytes": len(data),
+    }
+    )

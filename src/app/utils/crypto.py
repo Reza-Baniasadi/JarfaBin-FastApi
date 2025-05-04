@@ -91,3 +91,12 @@ async def normalize_symbols(file: UploadFile = File(...), body: SymbolMapBody = 
 @app.get("/health")
 async def health():
     return {"status": "ok"}
+
+
+@app.post("/model/analyze", response_model=schemas.ModelResponse)
+async def analyze(req: schemas.ModelRequest):
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        resp = await client.post(settings.MODEL_ENDPOINT, json=req.dict())
+        if resp.status_code != 200:
+            raise HTTPException(status_code=resp.status_code, detail=f"Model error: {resp.text}")
+        return schemas.ModelResponse(predictions=resp.json().get("predictions"), raw=resp.json())``

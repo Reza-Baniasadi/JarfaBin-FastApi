@@ -13,7 +13,7 @@ def memory_optimize(df: pd.DataFrame) -> pd.DataFrame:
         df[c] = pd.to_numeric(df[c], downcast="integer")
     for c in df.select_dtypes(include=["object"]).columns:
         nunique = df[c].nunique(dropna=False)
-    if nunique / max(len(df), 1) < 0.5:
+    if nunique / max(len(df), 1) < 0.8:
         df[c] = df[c].astype("category")
     return df
 

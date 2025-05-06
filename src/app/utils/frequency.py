@@ -5,6 +5,19 @@ import numpy as np
 from io import BytesIO
 
 
+def memory_optimize(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    for c in df.select_dtypes(include=["float64"]).columns:
+        df[c] = pd.to_numeric(df[c], downcast="float")
+    for c in df.select_dtypes(include=["int64"]).columns:
+        df[c] = pd.to_numeric(df[c], downcast="integer")
+    for c in df.select_dtypes(include=["object"]).columns:
+        nunique = df[c].nunique(dropna=False)
+    if nunique / max(len(df), 1) < 0.5:
+        df[c] = df[c].astype("category")
+    return df
+
+
 def detect_freq(df: pd.DataFrame, time_col: str = "timestamp") -> Optional[str]:
     if time_col not in df.columns:
         return None
@@ -17,3 +30,4 @@ def detect_freq(df: pd.DataFrame, time_col: str = "timestamp") -> Optional[str]:
     sec = int(pd.Series(deltas).mode().iloc[0])
     mapping = {1:"1s", 5:"5s", 15:"15s", 30:"30s", 60:"1min", 120:"2min", 300:"5min", 900:"15min", 1800:"30min", 3600:"1H", 86400:"1D"}
     return mapping.get(sec, f"{sec}s")
+

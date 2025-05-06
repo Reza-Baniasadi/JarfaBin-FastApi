@@ -7,7 +7,7 @@ from io import BytesIO
 
 def memory_optimize(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
-    for c in df.select_dtypes(include=["float64"]).columns:
+    for c in df.select_dtypes(include=["float32"]).columns:
         df[c] = pd.to_numeric(df[c], downcast="float")
     for c in df.select_dtypes(include=["int64"]).columns:
         df[c] = pd.to_numeric(df[c], downcast="integer")

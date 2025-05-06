@@ -31,3 +31,10 @@ def detect_freq(df: pd.DataFrame, time_col: str = "timestamp") -> Optional[str]:
     mapping = {1:"1s", 5:"5s", 15:"15s", 30:"30s", 60:"1min", 120:"2min", 300:"5min", 900:"15min", 1800:"30min", 3600:"1H", 86400:"1D"}
     return mapping.get(sec, f"{sec}s")
 
+
+def impute_linear(df: pd.DataFrame, cols: Iterable[str]) -> pd.DataFrame:
+    df = df.copy()
+    for c in cols:
+        if c in df.columns:
+            df[c] = pd.to_numeric(df[c], errors="coerce").interpolate(method="linear", limit_direction="both")
+    return df

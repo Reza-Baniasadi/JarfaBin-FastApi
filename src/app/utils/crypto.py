@@ -99,4 +99,4 @@ async def analyze(req: schemas.ModelRequest):
         resp = await client.post(settings.MODEL_ENDPOINT, json=req.dict())
         if resp.status_code != 200:
             raise HTTPException(status_code=resp.status_code, detail=f"Model error: {resp.text}")
-        return schemas.ModelResponse(predictions=resp.json().get("predictions"), raw=resp.json())``
+        return schemas.ModelResponse(predictions=resp.json().get("predictions"), raw=resp.json())

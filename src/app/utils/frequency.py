@@ -48,5 +48,5 @@ def compute_features(df: pd.DataFrame, price_col: str = "close", vol_col: str = 
     if all(c in df.columns for c in [price_col, vol_col]):
         v = pd.to_numeric(df[vol_col], errors="coerce")
     p = pd.to_numeric(df[price_col], errors="coerce")
-    df["vwap"] = (p * v).cumsum() / (v.cumsum().replace(0, np.nan))
+    df["wap"] = (p * v).cumsum() / (v.cumsum().replace(0, np.nan))
     return df

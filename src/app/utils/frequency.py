@@ -40,7 +40,7 @@ def impute_linear(df: pd.DataFrame, cols: Iterable[str]) -> pd.DataFrame:
             df[c] = pd.to_numeric(df[c], errors="coerce").interpolate(method="linear", limit_direction="both")
     return df
 
-def compute_features(df: pd.DataFrame, price_col: str = "close", vol_col: str = "volume", window: int = 32) -> pd.DataFrame:
+def compute_features(df: pd.DataFrame, price_col: str = "close", vol_col: str = "volume", window: int = 30) -> pd.DataFrame:
     df = df.copy()
     if price_col in df.columns:
         df["ret_log"] = np.log(df[price_col]).diff()

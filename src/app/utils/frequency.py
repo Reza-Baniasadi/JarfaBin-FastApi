@@ -39,3 +39,14 @@ def impute_linear(df: pd.DataFrame, cols: Iterable[str]) -> pd.DataFrame:
         if c in df.columns:
             df[c] = pd.to_numeric(df[c], errors="coerce").interpolate(method="linear", limit_direction="both")
     return df
+
+def compute_features(df: pd.DataFrame, price_col: str = "close", vol_col: str = "volume", window: int = 30) -> pd.DataFrame:
+    df = df.copy()
+    if price_col in df.columns:
+        df["ret_log"] = np.log(df[price_col]).diff()
+    df["vol_annual"] = df["ret_log"].rolling(window, min_periods=window//2).std() * np.sqrt(252)
+    if all(c in df.columns for c in [price_col, vol_col]):
+        v = pd.to_numeric(df[vol_col], errors="coerce")
+    p = pd.to_numeric(df[price_col], errors="coerce")
+    df["vwap"] = (p * v).cumsum() / (v.cumsum().replace(0, np.nan))
+    return df

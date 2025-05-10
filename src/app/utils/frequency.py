@@ -50,3 +50,13 @@ def compute_features(df: pd.DataFrame, price_col: str = "close", vol_col: str = 
     p = pd.to_numeric(df[price_col], errors="coerce")
     df["wap"] = (p * v).cumsum() / (v.cumsum().replace(0, np.nan))
     return df
+
+def concat_frames(frames: Iterable[pd.DataFrame]) -> pd.DataFrame:
+    frames = [f for f in frames if f is not None and len(f) > 0]
+    if not frames:
+        return pd.DataFrame()
+    df = pd.concat(frames, ignore_index=True, sort=False)
+    # استانداردسازی ساده
+    if "timestamp" in df.columns:
+        df = ensure_monotonic_time(df)
+    return df

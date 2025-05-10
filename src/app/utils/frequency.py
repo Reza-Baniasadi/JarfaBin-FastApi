@@ -56,7 +56,6 @@ def concat_frames(frames: Iterable[pd.DataFrame]) -> pd.DataFrame:
     if not frames:
         return pd.DataFrame()
     df = pd.concat(frames, ignore_index=True, sort=False)
-    # استانداردسازی ساده
     if "timestamp" in df.columns:
         df = ensure_monotonic_time(df)
     return df

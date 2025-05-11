@@ -59,3 +59,13 @@ def concat_frames(frames: Iterable[pd.DataFrame]) -> pd.DataFrame:
     if "timestamp" in df.columns:
         df = ensure_monotonic_time(df)
     return df
+
+
+@app.post("/files/clean/stream-parquet")
+async def clean_stream_parquet(file: UploadFile = File(...)):
+    from utils.file_utils import read_any, clean_crypto_df, to_parquet_bytes # type: ignore
+    raw = await file.read()
+    df = read_any(raw, file.filename)
+    cleaned, _ = clean_crypto_df(df)
+    data = to_parquet_bytes(cleaned)
+    return StreamingResponse(BytesIO(data), media_type="application/octet-stream", headers={"Content-Disposition": "attachment; filename=cleaned.parquet"})

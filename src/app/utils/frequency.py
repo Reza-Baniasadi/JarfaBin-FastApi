@@ -69,3 +69,14 @@ async def clean_stream_parquet(file: UploadFile = File(...)):
     cleaned, _ = clean_crypto_df(df)
     data = to_parquet_bytes(cleaned)
     return StreamingResponse(BytesIO(data), media_type="application/octet-stream", headers={"Content-Disposition": "attachment; filename=cleaned.parquet"})
+
+@app.post("/files/merge-clean")
+async def merge_and_clean(files: list[UploadFile] = File(...), resample_to: Optional[str] = None):
+    from utils.file_utils import read_any, concat_frames, clean_crypto_df # type: ignore
+    frames = []
+    for f in files:
+        raw = await f.read()
+    frames.append(read_any(raw, f.filename))
+    merged = concat_frames(frames)
+    cleaned, report = clean_crypto_df(merged, resample_to=resample_to)
+    return {"report": report.__dict__, "rows": len(cleaned)}

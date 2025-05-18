@@ -72,7 +72,7 @@ async def clean_stream_parquet(file: UploadFile = File(...)):
 
 @app.post("/files/merge-clean")
 async def merge_and_clean(files: list[UploadFile] = File(...), resample_to: Optional[str] = None):
-    from utils.file_utils import read_any, concat_frames, clean_crypto_df # type: ignore
+    from utils.file_utils import read_any, concat_frames, clean_crypto_df 
     frames = []
     for f in files:
         raw = await f.read()

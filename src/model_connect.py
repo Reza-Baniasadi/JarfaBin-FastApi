@@ -12,3 +12,8 @@ class CryptoPriceResponse(BaseModel):
 class ModelRequest(BaseModel):
     text: Optional[str] = None
     features: Optional[Dict[str, Any]] = None
+
+
+class ModelResponse(BaseModel):
+    predictions: Optional[List[Any]] = None
+    raw: Optional[Dict[str, Any]] = None

@@ -22,7 +22,7 @@ app = FastAPI(title="FastAPI + ArzDigital + Model integration")
 
 ARZ_BASE = "https://console.arzdigital.com/api"  
 
-async def fetch_arzdigital_price(symbol: str) -> dict:
+async def fetch_crypto_price(symbol: str) -> dict:
     headers = {}
     if settings.ARZDIGITAL_API_KEY:
         headers["Authorization"] = f"Bearer {settings.ARZDIGITAL_API_KEY}"
@@ -30,7 +30,7 @@ async def fetch_arzdigital_price(symbol: str) -> dict:
         params = {"symbol": symbol}
     async with httpx.AsyncClient(timeout=15.0) as client:
         # url = f"https://console.arzdigital.com/api/v1/coins/{symbol}"
-        resp = await client.get(url, headers=headers, params=params)
+        resp = await client.get(headers=headers, params=params)
         if resp.status_code != 200:
             raise HTTPException(status_code=resp.status_code, detail=f"ArzDigital error: {resp.text}")
         return resp.json()

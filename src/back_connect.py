@@ -34,3 +34,13 @@ async def fetch_crypto_price(symbol: str) -> dict:
         if resp.status_code != 200:
             raise HTTPException(status_code=resp.status_code, detail=f"ArzDigital error: {resp.text}")
         return resp.json()
+
+async def call_model_endpoint(payload: dict) -> dict:
+    headers = {"Content-Type": "application/json"}
+    if settings.MODEL_API_KEY:
+        headers["Authorization"] = f"Bearer {settings.MODEL_API_KEY}"
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        resp = await client.post(settings.MODEL_ENDPOINT, json=payload, headers=headers)
+        if resp.status_code >= 400:
+            raise HTTPException(status_code=resp.status_code, detail=f"Model error: {resp.text}")
+        return resp.json()

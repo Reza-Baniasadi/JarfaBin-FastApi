@@ -44,3 +44,24 @@ async def call_model_endpoint(payload: dict) -> dict:
         if resp.status_code >= 400:
             raise HTTPException(status_code=resp.status_code, detail=f"Model error: {resp.text}")
         return resp.json()
+    
+
+
+
+@app.get("/crypto/{symbol}", response_model=CryptoPriceResponse)
+async def get_crypto_price(symbol: str):
+    data = await fetch_arzdigital_price(symbol)
+    try:
+        price_usd = float(data.get("price_usd") or data.get("price") or 0)
+        price_toman = None
+        if data.get("tether_rate"):
+            price_toman = price_usd * float(data["tether_rate"])
+        return CryptoPriceResponse(
+            symbol=symbol.upper(),
+            price_usd=price_usd,
+            price_toman=price_toman,
+            timestamp=data.get("timestamp"),
+            raw=data
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Parsing error: {e}")

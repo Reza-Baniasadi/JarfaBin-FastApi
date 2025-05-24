@@ -28,3 +28,10 @@ def add_user_crypto(user_crypto: schemas.UserCryptoCreate, db: Session = Depends
 async def update_prices(background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     background_tasks.add_task(tasks.update_all_crypto_prices, db)
     return {"message": "Price update started in background"}
+
+
+@app.post("/model/predict", response_model=ModelResponse)
+async def predict_with_model(req: ModelRequest):
+    payload = req.dict(exclude_none=True)
+    model_resp = await call_model_endpoint(payload)
+    return ModelResponse(predictions=model_resp.get("predictions"), raw=model_resp)

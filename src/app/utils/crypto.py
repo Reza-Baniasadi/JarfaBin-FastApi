@@ -100,3 +100,14 @@ async def analyze(req: schemas.ModelRequest):
         if resp.status_code != 200:
             raise HTTPException(status_code=resp.status_code, detail=f"Model error: {resp.text}")
         return schemas.ModelResponse(predictions=resp.json().get("predictions"), raw=resp.json())
+    
+
+@app.post("/crypto/{symbol}", response_model=schemas.CryptoPriceResponse)
+async def add_price(symbol: str, db: Session = Depends(get_db)):
+    data = await fetch_price(symbol)
+    price_usd = float(data.get("price_usd") or data.get("price") or 0)
+    price_toman = None
+    if data.get("tether_rate"):
+        price_toman = price_usd * float(data["tether_rate"])
+    price_obj = schemas.CryptoPriceCreate(symbol=symbol.upper(), price_usd=price_usd, price_toman=price_toman)
+    return crud.create_price(db, price_obj)

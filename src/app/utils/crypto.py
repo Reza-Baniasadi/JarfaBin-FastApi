@@ -111,3 +111,9 @@ async def add_price(symbol: str, db: Session = Depends(get_db)):
         price_toman = price_usd * float(data["tether_rate"])
     price_obj = schemas.CryptoPriceCreate(symbol=symbol.upper(), price_usd=price_usd, price_toman=price_toman)
     return crud.create_price(db, price_obj)
+
+def save_price_task(symbol: str, price_usd: float, price_toman: float, db: Session):
+    from schemas import CryptoPriceCreate
+    import crud
+    obj = CryptoPriceCreate(symbol=symbol, price_usd=price_usd, price_toman=price_toman)
+    crud.create_price(db, obj)

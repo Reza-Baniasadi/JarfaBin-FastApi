@@ -115,3 +115,13 @@ def save_price_task(symbol: str, price_usd: float, price_toman: float, db: Sessi
     import crud
     obj = CryptoPriceCreate(symbol=symbol, price_usd=price_usd, price_toman=price_toman)
     crud.create_price(db, obj)
+
+    background_tasks.add_task(save_price_task, symbol.upper(), price_usd, price_toman, db)
+
+    return schemas.CryptoPriceResponse(
+        id=0,  # چون هنوز در DB ذخیره نشده
+        symbol=symbol.upper(),
+        price_usd=price_usd,
+        price_toman=price_toman,
+        timestamp=None
+    )

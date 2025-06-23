@@ -103,14 +103,12 @@ async def analyze(req: schemas.ModelRequest):
     
 
 @app.post("/crypto/{symbol}", response_model=schemas.CryptoPriceResponse)
-async def add_price(symbol: str, db: Session = Depends(get_db)):
+async def add_price(symbol: str, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     data = await fetch_price(symbol)
     price_usd = float(data.get("price_usd") or data.get("price") or 0)
-    price_toman = None
-    if data.get("tether_rate"):
-        price_toman = price_usd * float(data["tether_rate"])
-    price_obj = schemas.CryptoPriceCreate(symbol=symbol.upper(), price_usd=price_usd, price_toman=price_toman)
-    return crud.create_price(db, price_obj)
+    price_toman = price_usd * float(data.get("tether_rate", 0)) if data.get("tether_rate") else None
+
+    background_tasks.add_task(save_price_task, symbol.upper(), price_usd, price_toman, db)
 
 def save_price_task(symbol: str, price_usd: float, price_toman: float, db: Session):
     from schemas import CryptoPriceCreate

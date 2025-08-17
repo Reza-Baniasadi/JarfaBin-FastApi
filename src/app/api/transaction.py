@@ -1,19 +1,20 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from .. import schemas, crud, database
+from .. import schemas as s, crud as c, database as db_mod
 
-router = APIRouter()
+finance_router = APIRouter(prefix="/finance", tags=["transactions"])
 
-@router.post("/transactions/", response_model=schemas.TransactionResponse)
-async def create_transaction(transaction: schemas.TransactionCreate, db: Session = Depends(database.get_db)):
-    return crud.create_transaction(db=db, transaction=transaction)
+async def _get_db_session() -> Session:
+    return db_mod.get_db()
 
+@finance_router.post("/add", response_model=s.TransactionResponse)
+async def add_transaction(tx_data: s.TransactionCreate, db: Session = Depends(_get_db_session)):
+    return c.create_transaction(db=db, transaction=tx_data)
 
+@finance_router.get("/list", response_model=list[s.TransactionResponse])
+async def list_transactions(start: int = 0, count: int = 100, db: Session = Depends(_get_db_session)):
+    return c.get_transactions(db=db, skip=start, limit=count)
 
-@router.get("/transactions/", response_model=list[schemas.TransactionResponse])
-async def get_transactions(skip: int = 0, limit: int = 100, db: Session = Depends(database.get_db)):
-    return crud.get_transactions(db=db, skip=skip, limit=limit)
-
-@router.get("/transaction/{transaction_id}", response_model=schemas.TransactionResponse)
-async def get_transaction(transaction_id: int, db: Session = Depends(database.get_db)):
-    return crud.get_transaction(db=db, transaction_id=transaction_id)
+@finance_router.get("/detail/{tx_id}", response_model=s.TransactionResponse)
+async def transaction_detail(tx_id: int, db: Session = Depends(_get_db_session)):
+    return c.get_transaction(db=db, transaction_id=tx_id)

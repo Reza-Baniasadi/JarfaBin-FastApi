@@ -1,39 +1,45 @@
 from sqlalchemy.orm import Session
-from models import Member
-from schemas import MemberCreate, MemberUpdate
-from typing import List
 from fastapi import HTTPException
-from sqlalchemy.orm import Session
-import sys
-sys.path.append(r'D:/API ENV/crud.py') 
-import schemas,models
 from pymysql.err import IntegrityError
+from typing import List
+
+from models import Member as DBMember, Country_Info as DBCountry
+from schemas import MemberCreate as MemberSchema, MemberUpdate as CountryUpdateSchema
 
 
-
-
-def create_user(db: Session, user: schemas.UserCreate):
-    db_user = models.User(**user.dict())
+def add_member(db: Session, member_data: MemberSchema) -> DBMember:
+    """Create a new member in the database."""
+    new_member = DBMember(**member_data.dict())
     try:
-        db.add(db_user)
+        db.add(new_member)
         db.commit()
-        db.refresh(db_user)
+        db.refresh(new_member)
     except IntegrityError:
         db.rollback()
         raise HTTPException(status_code=400, detail="Username or email already exists")
-    return db_user
+    return new_member
 
-def get_country_info(db: Session, country_id: int):
-    return db.query(models.Country_Info).filter(models.Country_Info.Country_Id == country_id).first()
 
-def get_all_country_info(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Country_Info).offset(skip).limit(limit).all()
+def fetch_country(db: Session, country_id: int) -> DBCountry | None:
+    """Get a single country info by ID."""
+    return db.query(DBCountry).filter(DBCountry.Country_Id == country_id).first()
 
-def update_country_info(db: Session, country_id: int, country_info: schemas.update_country):
-    db_country_info = db.query(models.Country_Info).filter(models.Country_Info.Country_Id == country_id)
-    if db_country_info:
-        for attr, value in country_info.dict().items():
-            setattr(db_country_info, attr, value)
-        db.commit()
-        db.refresh(db_country_info)
-    return db_country_info
+
+def fetch_all_countries(db: Session, skip: int = 0, limit: int = 100) -> List[DBCountry]:
+    """Get a list of all countries with pagination."""
+    return db.query(DBCountry).offset(skip).limit(limit).all()
+
+
+def modify_country(db: Session, country_id: int, updates: CountryUpdateSchema) -> DBCountry | None:
+    """Update a country's information."""
+    country_query = db.query(DBCountry).filter(DBCountry.Country_Id == country_id)
+    country_record = country_query.first()
+    if not country_record:
+        raise HTTPException(status_code=404, detail="Country not found")
+
+    for field, value in updates.dict(exclude_unset=True).items():
+        setattr(country_record, field, value)
+
+    db.commit()
+    db.refresh(country_record)
+    return country_record

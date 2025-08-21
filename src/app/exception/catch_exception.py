@@ -1,16 +1,16 @@
-class CacheIdentificationInferenceError(Exception):
-    def __init__(self, message: str = "Could not infer id for resource being cached.") -> None:
-        self.message = message
-        super().__init__(self.message)
+class CacheIDError(Exception):
+    """Raised when the ID for a cached resource cannot be inferred."""
+    def __init__(self, message: str = "Could not infer ID for cached resource.") -> None:
+        super().__init__(message)
 
 
-class InvalidRequestError(Exception):
-    def __init__(self, message: str = "Type of request not supported.") -> None:
-        self.message = message
-        super().__init__(self.message)
+class UnsupportedRequestError(Exception):
+    """Raised when the type of request is not supported."""
+    def __init__(self, message: str = "Request type not supported.") -> None:
+        super().__init__(message)
 
 
-class MissingClientError(Exception):
-    def __init__(self, message: str = "Client is None.") -> None:
-        self.message = message
-        super().__init__(self.message)
+class ClientMissingError(Exception):
+    """Raised when a required client object is None."""
+    def __init__(self, message: str = "Client instance is None.") -> None:
+        super().__init__(message)

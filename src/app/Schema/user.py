@@ -37,3 +37,23 @@ class UserCreate(UserBase):
 
 class UserCreateInternal(UserBase):
     hashed_password: str
+
+
+class UserCreateInternal(UserBase):
+    hashed_password: str
+
+
+class UserUpdate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    name: Annotated[str | None, Field(min_length=2, max_length=30, examples=["User Userberg"], default=None)]
+    username: Annotated[
+        str | None, Field(min_length=2, max_length=20, pattern=r"^[a-z0-9]+$", examples=["userberg"], default=None)
+    ]
+    email: Annotated[EmailStr | None, Field(examples=["user.userberg@example.com"], default=None)]
+    profile_image_url: Annotated[
+        str | None,
+        Field(
+            pattern=r"^(https?|ftp)://[^\s/$.?#].[^\s]*$", examples=["https://www.profileimageurl.com"], default=None
+        ),
+    ]

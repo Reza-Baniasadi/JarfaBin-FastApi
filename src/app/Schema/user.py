@@ -27,3 +27,13 @@ class UserRead(BaseModel):
     email: Annotated[EmailStr, Field(examples=["user.userson@example.com"])]
     profile_image_url: str
     tier_id: int | None
+
+
+class UserCreate(UserBase):
+    model_config = ConfigDict(extra="forbid")
+
+    password: Annotated[str, Field(pattern=r"^.{8,}|[0-9]+|[A-Z]+|[a-z]+|[^a-zA-Z0-9]+$", examples=["Str1ngst!"])]
+
+
+class UserCreateInternal(UserBase):
+    hashed_password: str

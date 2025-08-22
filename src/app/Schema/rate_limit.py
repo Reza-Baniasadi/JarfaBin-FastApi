@@ -29,3 +29,26 @@ class RateLimitCreate(RateLimitBase):
     model_config = ConfigDict(extra="forbid")
 
     name: Annotated[str | None, Field(default=None, examples=["api_v1_users:5:60"])]
+
+
+class RateLimitCreateInternal(RateLimitCreate):
+    tier_id: int
+
+
+class RateLimitUpdate(BaseModel):
+    path: str | None = Field(default=None)
+    limit: int | None = None
+    period: int | None = None
+    name: str | None = None
+
+    @field_validator("path")
+    def validate_and_sanitize_path(cls, v: str) -> str:
+        return sanitize_path(v) if v is not None else None
+
+
+class RateLimitUpdateInternal(RateLimitUpdate):
+    updated_at: datetime
+
+
+class RateLimitDelete(BaseModel):
+    pass

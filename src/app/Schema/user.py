@@ -57,3 +57,22 @@ class UserUpdate(BaseModel):
             pattern=r"^(https?|ftp)://[^\s/$.?#].[^\s]*$", examples=["https://www.profileimageurl.com"], default=None
         ),
     ]
+
+
+class UserUpdateInternal(UserUpdate):
+    updated_at: datetime
+
+
+class UserTierUpdate(BaseModel):
+    tier_id: int
+
+
+class UserDelete(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    is_deleted: bool
+    deleted_at: datetime
+
+
+class UserRestoreDeleted(BaseModel):
+    is_deleted: bool

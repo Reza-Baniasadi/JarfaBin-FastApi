@@ -2,7 +2,7 @@ import redis
 import time
 import logging
 from config import settings
-from fastapi import HTTPException
+from fastapi import HTTPException , fastapi
 
 
 

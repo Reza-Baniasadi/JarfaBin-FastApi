@@ -1,54 +1,40 @@
 from datetime import datetime
 from typing import Annotated
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl
 
-from ..core.schemas import TimestampSchema
-
-
-def sanitize_path(path: str) -> str:
-    return path.strip("/").replace("/", "_")
+from ..core.schemas import PersistentDeletion, TimestampSchema, UUIDSchema
 
 
-class RateLimitBase(BaseModel):
-    path: Annotated[str, Field(examples=["users"])]
-    limit: Annotated[int, Field(examples=[5])]
-    period: Annotated[int, Field(examples=[60])]
-
-    @field_validator("path")
-    def validate_and_sanitize_path(cls, v: str) -> str:
-        return sanitize_path(v)
+class PostBase(BaseModel):
+    title: Annotated[str, Field(min_length=2, max_length=30, example="This is my post")]
+    text: Annotated[str, Field(min_length=1, max_length=63206, example="This is the content of my post.")] 
 
 
-class RateLimit(TimestampSchema, RateLimitBase):
-    tier_id: int
-    name: Annotated[str | None, Field(default=None, examples=["users:5:60"])]
-
-
-class RateLimitCreate(RateLimitBase):
+class PostCreate(PostBase):
+    media_url: Annotated[HttpUrl | None, Field(default=None, example="https://www.postimageurl.com")]
     model_config = ConfigDict(extra="forbid")
 
-    name: Annotated[str | None, Field(default=None, examples=["api_v1_users:5:60"])]
+
+class PostCreateInternal(PostCreate):
+    created_by_user_id: int
 
 
-class RateLimitCreateInternal(RateLimitCreate):
-    tier_id: int
+class PostUpdate(BaseModel):
+    title: Annotated[str | None, Field(min_length=2, max_length=30, example="This is my updated post", default=None)]
+    text: Annotated[str | None, Field(min_length=1, max_length=63206, example="This is the updated content of my post.", default=None)]
+    media_url: Annotated[HttpUrl | None, Field(default=None, example="https://www.postimageurl.com")]
+    model_config = ConfigDict(extra="forbid")
 
 
-class RateLimitUpdate(BaseModel):
-    path: str | None = Field(default=None)
-    limit: int | None = None
-    period: int | None = None
-    name: str | None = None
-
-    @field_validator("path")
-    def validate_and_sanitize_path(cls, v: str) -> str:
-        return sanitize_path(v) if v is not None else None
-
-
-class RateLimitUpdateInternal(RateLimitUpdate):
+class PostUpdateInternal(PostUpdate, TimestampSchema):
     updated_at: datetime
 
 
-class RateLimitDelete(BaseModel):
-    pass
+class PostRead(PostBase, UUIDSchema, TimestampSchema):
+    media_url: Annotated[HttpUrl | None, Field(default=None, example="https://www.postimageurl.com")]
+    created_by_user_id: int
+
+
+class PostDelete(BaseModel, PersistentDeletion):
+    model_config = ConfigDict(extra="forbid")

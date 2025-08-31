@@ -1,6 +1,6 @@
 import httpx
 
-COINGECKO_API_URL = "https://api.coingecko.com/api/v3"
+COINGECKO_API_URL = "https://localhost:3000/api/v3"
 
 async def fetch_crypto_price(symbol: str):
     async with httpx.AsyncClient() as client:

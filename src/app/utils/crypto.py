@@ -1,127 +1,121 @@
-from fastapi import FastAPI, UploadFile, File, Form
+from fastapi import FastAPI, UploadFile, File, Form, BackgroundTasks, Depends, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, Literal
-from utils.file_utils import read_any, clean_crypto_df, to_parquet_bytes 
+from utils.file_utils import read_any, clean_crypto_df, to_parquet_bytes
 import json
+import httpx
+
+app = FastAPI(title="Crypto Data Processor API", version="0.2.0")
 
 
-app = FastAPI(title="Crypto File Utils API", version="0.1.0")
+class CleaningOptions(BaseModel):
+    resample_interval: Optional[str] = Field(None, description="مثلاً '1min', '5min', '1H', '1D'")
+    pair_separator: Optional[str] = Field('/', description="جداکننده جفت ارز")
+    fill_method: Literal['ffill','bfill','none'] = 'ffill'
+    ticker_mapping: Optional[Dict[str, str]] = None
 
 
-class CleanOptions(BaseModel):
-    resample_to: Optional[str] = Field(None, description="مثلاً '1min', '5min', '1H', '1D'")
-    base_quote_sep: Optional[str] = Field('/', description="جداکننده جفت‌ارز مثل '/' یا '-' ")
-    freq_fill: Literal['ffill','bfill','none'] = 'ffill'
-    symbol_map: Optional[Dict[str,str]] = None
-
-
-@app.post("/files/clean")
-async def clean_file(
-file: UploadFile = File(...),
-resample_to: Optional[str] = Form(None),
-base_quote_sep: Optional[str] = Form('/'),
-freq_fill: str = Form('ffill'),
-symbol_map_json: Optional[str] = Form(None),
+@app.post("/process/clean")
+async def clean_uploaded_file(
+    uploaded_file: UploadFile = File(...),
+    resample_interval: Optional[str] = Form(None),
+    pair_separator: Optional[str] = Form('/'),
+    fill_method: str = Form('ffill'),
+    ticker_map_json: Optional[str] = Form(None),
 ):
-    raw = await file.read()
-    df = read_any(raw, file.filename)
-    symbol_map = json.loads(symbol_map_json) if symbol_map_json else None
+    raw_content = await uploaded_file.read()
+    df = read_any(raw_content, uploaded_file.filename)
+    ticker_map = json.loads(ticker_map_json) if ticker_map_json else None
 
-
-    cleaned, report = clean_crypto_df(
-    df,
-    symbol_map=symbol_map,
-    base_quote_sep=base_quote_sep or None,
-    resample_to=resample_to,
-    freq_fill=freq_fill,
-    )
-    preview = cleaned.head(10).to_dict(orient="records")
-    return JSONResponse(
-    content={
-    "report": report.__dict__,
-    "preview": preview,
-    }
+    cleaned_df, summary = clean_crypto_df(
+        df,
+        symbol_map=ticker_map,
+        base_quote_sep=pair_separator or None,
+        resample_to=resample_interval,
+        freq_fill=fill_method,
     )
 
+    preview_data = cleaned_df.head(10).to_dict(orient="records")
+
+    return JSONResponse({"summary": summary.__dict__, "preview": preview_data})
 
 
-@app.post("/files/clean/parquet")
-async def clean_file_parquet(
-file: UploadFile = File(...),
-resample_to: Optional[str] = Form(None),
-base_quote_sep: Optional[str] = Form('/'),
-freq_fill: str = Form('ffill'),
-symbol_map_json: Optional[str] = Form(None),
+@app.post("/process/clean/parquet")
+async def clean_and_export_parquet(
+    uploaded_file: UploadFile = File(...),
+    resample_interval: Optional[str] = Form(None),
+    pair_separator: Optional[str] = Form('/'),
+    fill_method: str = Form('ffill'),
+    ticker_map_json: Optional[str] = Form(None),
 ):
+    raw_content = await uploaded_file.read()
+    df = read_any(raw_content, uploaded_file.filename)
+    ticker_map = json.loads(ticker_map_json) if ticker_map_json else None
 
-    raw = await file.read()
-    df = read_any(raw, file.filename)
-    symbol_map = json.loads(symbol_map_json) if symbol_map_json else None
-
-
-    cleaned, report = clean_crypto_df(
-    df,
-    symbol_map=symbol_map,
-    base_quote_sep=base_quote_sep or None,
-    resample_to=resample_to,
-    freq_fill=freq_fill,
-    )
-    data = to_parquet_bytes(cleaned)
-    return JSONResponse(
-    content={
-    "bytes": len(data),
-    }
+    cleaned_df, _ = clean_crypto_df(
+        df,
+        symbol_map=ticker_map,
+        base_quote_sep=pair_separator or None,
+        resample_to=resample_interval,
+        freq_fill=fill_method,
     )
 
+    parquet_bytes = to_parquet_bytes(cleaned_df)
 
-class SymbolMapBody(BaseModel):
-    symbols: Dict[str,str] = Field(..., description="{'XBTUSDT': 'BTCUSDT', 'ETH-USD': 'ETHUSD'}")  
+    return JSONResponse({"size_bytes": len(parquet_bytes)})
+
+
+class TickerMappingBody(BaseModel):
+    mapping: Dict[str, str] = Field(..., description="{'XBTUSDT': 'BTCUSDT', 'ETH-USD': 'ETHUSD'}")
 
 
 @app.post("/symbols/normalize")
-async def normalize_symbols(file: UploadFile = File(...), body: SymbolMapBody = None):
-    from utils.file_utils import read_any, standardize_columns, normalize_tickers # type: ignore
-    raw = await file.read()
-    df = read_any(raw, file.filename)
-    df = standardize_columns(df)
-    df = normalize_tickers(df, mapping=(body.symbols if body else None), base_quote_sep='/')
-    return {"head": df.head(10).to_dict(orient="records")}
+async def normalize_ticker_symbols(file: UploadFile = File(...), body: TickerMappingBody = None):
+    from utils.file_utils import standardize_columns, normalize_tickers
 
-@app.get("/health")
-async def health():
-    return {"status": "ok"}
+    raw_content = await file.read()
+    df = read_any(raw_content, file.filename)
+    df = standardize_columns(df)
+    df = normalize_tickers(df, mapping=(body.mapping if body else None), base_quote_sep='/')
+    return {"preview": df.head(10).to_dict(orient="records")}
+
+
+@app.get("/system/health")
+async def check_health():
+    return {"status": "healthy"}
 
 
 @app.post("/model/analyze", response_model=schemas.ModelResponse)
-async def analyze(req: schemas.ModelRequest):
+async def model_analysis(request_data: schemas.ModelRequest):
     async with httpx.AsyncClient(timeout=30.0) as client:
-        resp = await client.post(settings.MODEL_ENDPOINT, json=req.dict())
-        if resp.status_code != 200:
-            raise HTTPException(status_code=resp.status_code, detail=f"Model error: {resp.text}")
-        return schemas.ModelResponse(predictions=resp.json().get("predictions"), raw=resp.json())
-    
+        response = await client.post(settings.MODEL_ENDPOINT, json=request_data.dict())
+        if response.status_code != 200:
+            raise HTTPException(status_code=response.status_code, detail=f"Model error: {response.text}")
+        result = response.json()
+        return schemas.ModelResponse(predictions=result.get("predictions"), raw=result)
 
-@app.post("/crypto/{symbol}", response_model=schemas.CryptoPriceResponse)
-async def add_price(symbol: str, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
-    data = await fetch_price(symbol)
-    price_usd = float(data.get("price_usd") or data.get("price") or 0)
-    price_toman = price_usd * float(data.get("tether_rate", 0)) if data.get("tether_rate") else None
 
-    background_tasks.add_task(save_price_task, symbol.upper(), price_usd, price_toman, db)
+@app.post("/crypto/{ticker}", response_model=schemas.CryptoPriceResponse)
+async def add_crypto_price(ticker: str, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    data = await fetch_price(ticker)
+    usd_price = float(data.get("price_usd") or data.get("price") or 0)
+    toman_price = usd_price * float(data.get("tether_rate", 0)) if data.get("tether_rate") else None
 
-def save_price_task(symbol: str, price_usd: float, price_toman: float, db: Session):
+    background_tasks.add_task(store_price_task, ticker.upper(), usd_price, toman_price, db)
+
+
+def store_price_task(ticker: str, usd: float, toman: Optional[float], db: Session):
     from schemas import CryptoPriceCreate
     import crud
-    obj = CryptoPriceCreate(symbol=symbol, price_usd=price_usd, price_toman=price_toman)
-    crud.create_price(db, obj)
+
+    price_record = CryptoPriceCreate(symbol=ticker, price_usd=usd, price_toman=toman)
+    crud.create_price(db, price_record)
 
     return schemas.CryptoPriceResponse(
-        id=0,  
-        symbol=symbol.upper(),
-        price_usd=price_usd,
-        price_toman=price_toman,
+        id=0,
+        symbol=ticker.upper(),
+        price_usd=usd,
+        price_toman=toman,
         timestamp=None
     )
-
-    

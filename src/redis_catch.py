@@ -2,6 +2,9 @@ import redis
 import time
 import logging
 from config import settings
+from fastapi import HTTPException
+
+
 
 redis_client = redis.StrictRedis.from_url(settings.REDIS_URL, decode_responses=True)
 

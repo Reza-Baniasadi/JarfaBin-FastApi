@@ -87,3 +87,7 @@ async def normalize_symbols(file: UploadFile = File(...), body: SymbolMapBody = 
     df = standardize_columns(df)
     df = normalize_tickers(df, mapping=(body.symbols if body else None), base_quote_sep='/')
     return {"head": df.head(10).to_dict(orient="records")}
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
